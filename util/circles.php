@@ -14,7 +14,7 @@ $height3 = 2 * $radius + $deltax + 2 * $margin;
 
 $circles2 = array(
     array(
-        'color' => array(255, 255, 255, $transparency),
+        'color' => array(255, 200, 200, $transparency),
         'coords' => array(
             'x' => $margin + $radius, 
             'y' => $margin + $radius),
@@ -24,7 +24,7 @@ $circles2 = array(
             'y' => $margin + $radius / 2)
         ),
     array(
-        'color' => array(255, 255, 255, $transparency),
+        'color' => array(200, 255, 200, $transparency),
         'coords' => array(
             'x' => $margin + 2 * $radius, 
             'y' => $margin + $radius),
@@ -38,7 +38,7 @@ $circles2 = array(
 $circles3 = $circles2;
 $circles3[2] =
     array(
-        'color' => array(255, 255, 255, $transparency),
+        'color' => array(200, 200, 255, $transparency),
         'coords' => array(
             'x' => $margin + $radius + $radius / 2, 
             'y' => $margin + $radius + $deltax),
