@@ -15,7 +15,7 @@ $height3 = 2 * $radius + $deltax + 2 * $margin;
 
 $circles2 = array(
     array(
-        'color' => array(255, 200, 200, $transparency),
+        'color' => array(255, 250, 250, $transparency),
         'coords' => array(
             'x' => $margin + $radius, 
             'y' => $margin + $radius),
@@ -25,7 +25,7 @@ $circles2 = array(
             'y' => $margin + $radius / 2)
         ),
     array(
-        'color' => array(200, 255, 200, $transparency),
+        'color' => array(250, 255, 250, $transparency),
         'coords' => array(
             'x' => $margin + 2 * $radius, 
             'y' => $margin + $radius),
@@ -39,7 +39,7 @@ $circles2 = array(
 $circles3 = $circles2;
 $circles3[2] =
     array(
-        'color' => array(200, 200, 255, $transparency),
+        'color' => array(250, 250, 255, $transparency),
         'coords' => array(
             'x' => $margin + $radius + $radius / 2, 
             'y' => $margin + $radius + $deltax),
@@ -162,7 +162,7 @@ function createimages($filenameprefix, $circles, $width, $height, $display) {
         imagecolordeallocate($images[$i], $bg);
     }
     
-    //! create the overlays
+    // create the overlays
     for ($y = 0; $y < $height - 1; $y++) {
         for ($x = 0; $x < $width - 1; $x++) {
             $rgb = imagecolorat($image, $x, $y);
@@ -170,7 +170,7 @@ function createimages($filenameprefix, $circles, $width, $height, $display) {
             $g = ($rgb >> 8) & 0xFF;
             $b = $rgb & 0xFF;
             
-            $m = ($x + $y) % 7;
+            $m = ($x + $y) % 11;
             if ((0 == $m) || (1 == $m)) {
                 if ($r + $g + $b > 200){
                     $r = 0;
@@ -191,9 +191,55 @@ function createimages($filenameprefix, $circles, $width, $height, $display) {
         }
     }
     
-    //! write out overlays
+    // write out overlays
     for ($i = 1; $i < pow(2, count($circles)); $i++) {
         imagepng($images[$i], $filenameprefix.$i.'.png', 9);
+        imagedestroy($images[$i]);
+    }
+
+	$images = array(); 
+    // init overlays
+    for ($i = 1; $i < pow(2, count($circles)); $i++) {
+        $images[$i] = imagecreatetruecolor($width, $height);
+        imagealphablending($images[$i], true);
+        $bg = imagecolorallocate($images[$i], 255, 255, 255);
+        imagecolortransparent($images[$i], $bg);
+        imagefilledrectangle($images[$i], 0, 0, $width - 1, $height - 1, $bg);
+        imagecolordeallocate($images[$i], $bg);
+    }
+    
+    // create the overlays
+    for ($y = 0; $y < $height - 1; $y++) {
+        for ($x = 0; $x < $width - 1; $x++) {
+            $rgb = imagecolorat($image, $x, $y);
+            $r = ($rgb >> 16) & 0xFF;
+            $g = ($rgb >> 8) & 0xFF;
+            $b = $rgb & 0xFF;
+            
+            $m = ($x + $y) % 11;
+            if ((5 == $m) || (6 == $m)) {
+                if ($r + $g + $b > 200){
+                    $r = 255;
+                    $g = 0;
+                    $b = 0;                    
+                } else {
+                    $r = 255;
+                    $g = 255;
+                    $b = 255;
+                }
+                $ccoded = circlescoded($circles, $x, $y);
+                if ($ccoded !== 0) {
+                    $color = imagecolorallocate($images[$ccoded], $r, $g, $b);
+                    imagesetpixel($images[$ccoded], $x, $y, $color);
+                    imagecolordeallocate($images[$ccoded], $color);
+                }
+            }
+        }
+    }
+    
+    // write out overlays
+    for ($i = 1; $i < pow(2, count($circles)); $i++) {
+        imagepng($images[$i], $filenameprefix.$i.'i.png', 9);
         imagedestroy($images[$i]);
     }
     
