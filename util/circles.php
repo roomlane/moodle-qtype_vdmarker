@@ -12,6 +12,14 @@ $deltax = sqrt($radius * $radius - ($radius / 2) * ($radius / 2));
 $height2 = 2 * $radius + 2 * $margin;
 $height3 = 2 * $radius + $deltax + 2 * $margin;
 
+// universe
+$universe = array(
+	'color' => array(255, 255, 255, $transparency),
+	'label' => 'U',
+	'labelpos' => array(
+		'x' => $margin * 0.7,
+		'y' => $margin * 0.7)
+	);
 
 $circles2 = array(
     array(
@@ -75,6 +83,14 @@ function drawcirclelabel($image, $circle, $radius, $color) {
     imagechar($image, $fontsize, $x, $y, $label, $color);
 }
 
+function drawuniverselabel($image, $color){
+    global $fontsize, $universe;
+    $x = $universe['labelpos']['x'];
+    $y = $universe['labelpos']['y'];
+    $label = $universe['label'];
+    imagechar($image, $fontsize, $x, $y, $label, $color);
+}
+
 function replacecolor($c) {
     switch ($c) {
         case 150:
@@ -94,15 +110,23 @@ function replacecolor($c) {
     return $c;
 }
 
+function labelarea($labelpos, $x, $y){
+	global $fontsize;
+	$dx = abs($x - $labelpos['x'] - $fontsize * 0.8);
+	$dy = abs($y - $labelpos['y'] - $fontsize * 1.5);
+	if (3 * $fontsize * $fontsize >= $dx * $dx + $dy * $dy) {
+		return true;
+	}
+	return false;
+}
+
 function circlescoded($circles, $x, $y) {
-    global $radius, $fontsize;
+    global $radius, $universe;
     $c = 0;
     $i = 0;
     foreach ($circles as $value) {
-        $dx = abs($x - $value['labelpos']['x'] - $fontsize * 0.8);
-        $dy = abs($y - $value['labelpos']['y'] - $fontsize * 1.5);
-        if (3 * $fontsize * $fontsize >= $dx * $dx + $dy * $dy) {
-            return 0;
+		if (labelarea($value['labelpos'], $x, $y)){
+            return -1;
         }
 
         $dx = abs($x - $value['coords']['x']);
@@ -112,6 +136,17 @@ function circlescoded($circles, $x, $y) {
         }
         $i++;
     }
+
+	if (0 == $c){
+		// this is universe
+		if (labelarea($universe['labelpos'], $x, $y)){
+            return -1;
+        }
+		else {
+			return 0;
+		}
+	}
+
     return $c;
 }
 
@@ -130,7 +165,7 @@ function createimages($filenameprefix, $circles, $width, $height, $display) {
     imagecolordeallocate($image, $border);
 
     $border = imagecolorallocate($image, 50, 50, 50);
-    foreach ($circles as $value) {
+	foreach ($circles as $value) {
         drawcircle($image, $value, $radius);
     }
     imagecolordeallocate($image, $border);
@@ -153,7 +188,7 @@ function createimages($filenameprefix, $circles, $width, $height, $display) {
     
     $images = array(); 
     // init overlays
-    for ($i = 1; $i < pow(2, count($circles)); $i++) {
+    for ($i = 0; $i < pow(2, count($circles)); $i++) {
         $images[$i] = imagecreatetruecolor($width, $height);
         imagealphablending($images[$i], true);
         $bg = imagecolorallocate($images[$i], 255, 255, 255);
@@ -182,7 +217,7 @@ function createimages($filenameprefix, $circles, $width, $height, $display) {
                     $b = 255;
                 }
                 $ccoded = circlescoded($circles, $x, $y);
-                if ($ccoded !== 0) {
+                if ($ccoded !== -1) {
                     $color = imagecolorallocate($images[$ccoded], $r, $g, $b);
                     imagesetpixel($images[$ccoded], $x, $y, $color);
                     imagecolordeallocate($images[$ccoded], $color);
@@ -192,14 +227,14 @@ function createimages($filenameprefix, $circles, $width, $height, $display) {
     }
     
     // write out overlays
-    for ($i = 1; $i < pow(2, count($circles)); $i++) {
+    for ($i = 0; $i < pow(2, count($circles)); $i++) {
         imagepng($images[$i], $filenameprefix.$i.'.png', 9);
         imagedestroy($images[$i]);
     }
 
 	$images = array(); 
     // init overlays
-    for ($i = 1; $i < pow(2, count($circles)); $i++) {
+    for ($i = 0; $i < pow(2, count($circles)); $i++) {
         $images[$i] = imagecreatetruecolor($width, $height);
         imagealphablending($images[$i], true);
         $bg = imagecolorallocate($images[$i], 255, 255, 255);
@@ -228,7 +263,7 @@ function createimages($filenameprefix, $circles, $width, $height, $display) {
                     $b = 255;
                 }
                 $ccoded = circlescoded($circles, $x, $y);
-                if ($ccoded !== 0) {
+                if ($ccoded !== -1) {
                     $color = imagecolorallocate($images[$ccoded], $r, $g, $b);
                     imagesetpixel($images[$ccoded], $x, $y, $color);
                     imagecolordeallocate($images[$ccoded], $color);
@@ -238,7 +273,7 @@ function createimages($filenameprefix, $circles, $width, $height, $display) {
     }
     
     // write out overlays
-    for ($i = 1; $i < pow(2, count($circles)); $i++) {
+    for ($i = 0; $i < pow(2, count($circles)); $i++) {
         imagepng($images[$i], $filenameprefix.$i.'i.png', 9);
         imagedestroy($images[$i]);
     }
@@ -249,7 +284,8 @@ function createimages($filenameprefix, $circles, $width, $height, $display) {
 
     imagefilter($image, IMG_FILTER_GAUSSIAN_BLUR);
 
-    foreach ($circles as $value) {
+    drawuniverselabel($image, $border);
+	foreach ($circles as $value) {
         drawcirclelabel($image, $value, $radius, $border);
     }
 

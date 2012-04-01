@@ -59,11 +59,11 @@ function point_it(event){
 	pos_y = event.offsetY?(event.offsetY):event.pageY-document.getElementById("ho").offsetTop;
 	
 	var c = circles_encoded(pos_x, pos_y);
-    if (c != 0)
-    {
+//    if (c != 0)
+//    {
        var id = "ov" + c;
        toggle_visibility(id);
-    }
+//    }
 }
 </script>
 
@@ -71,6 +71,7 @@ function point_it(event){
 something <br />
 <div class="holder" id="ho" OnClick="point_it(event)" />
   <img src="3c.png" />
+  <img src="3c0.png" class="overlay" id="ov0" />
   <img src="3c1.png" class="overlay" id="ov1" />
   <img src="3c2.png" class="overlay" id="ov2" />
   <img src="3c3.png" class="overlay" id="ov3" />
@@ -78,6 +79,7 @@ something <br />
   <img src="3c5.png" class="overlay" id="ov5" />
   <img src="3c6.png" class="overlay" id="ov6" />
   <img src="3c7.png" class="overlay" id="ov7" />
+  <img src="3c0i.png" class="overlay" id="ov0i" />
   <img src="3c1i.png" class="overlay" id="ov1i" />
   <img src="3c2i.png" class="overlay" id="ov2i" />
   <img src="3c3i.png" class="overlay" id="ov3i" />
