@@ -12,6 +12,7 @@ $deltax = sqrt($radius * $radius - ($radius / 2) * ($radius / 2));
 $height2 = 2 * $radius + 2 * $margin;
 $height3 = 2 * $radius + $deltax + 2 * $margin;
 
+
 $circles2 = array(
     array(
         'color' => array(255, 200, 200, $transparency),
@@ -70,7 +71,7 @@ function drawcirclelabel($image, $circle, $radius, $color) {
     global $fontsize;
     $x = $circle['labelpos']['x'];
     $y = $circle['labelpos']['y'];
-    $label = $circle[label];
+    $label = $circle['label'];
     imagechar($image, $fontsize, $x, $y, $label, $color);
 }
 
@@ -137,8 +138,8 @@ function createimages($filenameprefix, $circles, $width, $height, $display) {
     //! create json with the circle coordinates and radiuses
     
     // colorize
-    for ($y = 0; $y < $height; $y++) {
-        for ($x = 0; $x < $width; $x++) {
+    for ($y = 0; $y < $height - 1; $y++) {
+        for ($x = 0; $x < $width - 1; $x++) {
             $rgb = imagecolorat($image, $x, $y);
             $r = replacecolor(($rgb >> 16) & 0xFF);
             $g = replacecolor(($rgb >> 8) & 0xFF);
@@ -162,8 +163,8 @@ function createimages($filenameprefix, $circles, $width, $height, $display) {
     }
     
     //! create the overlays
-    for ($y = 0; $y < $height; $y++) {
-        for ($x = 0; $x < $width; $x++) {
+    for ($y = 0; $y < $height - 1; $y++) {
+        for ($x = 0; $x < $width - 1; $x++) {
             $rgb = imagecolorat($image, $x, $y);
             $r = ($rgb >> 16) & 0xFF;
             $g = ($rgb >> 8) & 0xFF;
