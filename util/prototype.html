@@ -1,0 +1,92 @@
+<html>
+
+<style type="text/css">
+
+ div.holder {
+  position:relative;
+  cursor:crosshair;
+ }
+
+ img.overlay {
+  position:absolute;
+  top:0px;
+  left:0px;
+ }
+
+</style>
+
+<script language="JavaScript">
+
+function toggle_visibility(id){
+	if (document.getElementById(id).style.visibility == "hidden")
+	{	
+	  document.getElementById(id).style.visibility = "visible";
+
+	} else {
+  	  document.getElementById(id).style.visibility = "hidden";
+	}
+}
+
+var radius = 60;
+function circles_encoded(x, y) {
+	var circles = new Array();
+	circles[0] = new Array(80, 80);
+	circles[1] = new Array(140, 80);
+	circles[2] = new Array(110, 132);
+
+  var res = 0;
+  for (i = 0; i < circles.length; i++)
+  {
+    var dx = Math.abs(x - circles[i][0]);
+    var dy = Math.abs(y - circles[i][1]);
+    if (radius * radius >= dx * dx + dy * dy) {
+      res += Math.pow(2, i);
+    }
+  }
+  return res;
+}
+
+function point_it(event){
+	pos_x = event.offsetX?(event.offsetX):event.pageX-document.getElementById("ho").offsetLeft;
+	pos_y = event.offsetY?(event.offsetY):event.pageY-document.getElementById("ho").offsetTop;
+	
+	var c = circles_encoded(pos_x, pos_y);
+    if (c != 0)
+    {
+       var id = "ov" + c;
+       toggle_visibility(id);
+    }
+}
+</script>
+
+<body>
+something <br />
+<div class="holder" id="ho" OnClick="point_it(event)" />
+  <img src="3c.png" />
+  <img src="3c1.png" class="overlay" id="ov1" />
+  <img src="3c2.png" class="overlay" id="ov2" />
+  <img src="3c3.png" class="overlay" id="ov3" />
+  <img src="3c4.png" class="overlay" id="ov4" />
+  <img src="3c5.png" class="overlay" id="ov5" />
+  <img src="3c6.png" class="overlay" id="ov6" />
+  <img src="3c7.png" class="overlay" id="ov7" />
+</div> <br />
+
+something else <br />
+
+<script language="JavaScript">
+var circles = Array(
+  1,
+  2,
+  3
+  );
+
+for (x in circles)
+{
+  document.write(circles[x] + "<br />");
+}
+
+</script>
+
+</body>
+</html>
