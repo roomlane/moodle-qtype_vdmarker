@@ -17,11 +17,11 @@
 /**
  * Defines the editing form for the Venn diagram question type.
  *
+ * @package    rs_questiontypes
  * @subpackage vdmarker
  * @author     immor@hot.ee
  * @copyright  &copy; 2012 Rommi Saar
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @package    rs_questiontypes
  */ 
 
 defined('MOODLE_INTERNAL') || die();

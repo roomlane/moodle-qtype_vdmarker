@@ -21,11 +21,11 @@ require_once($CFG->dirroot . '/question/engine/simpletest/helpers.php');
 /**
  * Unit tests for the Venn diagram markers question definition class. 
  *
+ * @package    rs_questiontypes
  * @subpackage vdmarker
  * @author     immor@hot.ee
  * @copyright  &copy; 2012 Rommi Saar
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @package    rs_questiontypes
  */
 class qtype_vdmarker_test extends UnitTestCase {
     /** @var qtype_vdmarker instance of the question type class to test. */
