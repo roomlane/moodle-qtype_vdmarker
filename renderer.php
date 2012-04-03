@@ -57,5 +57,14 @@ class qtype_vdmarker_renderer extends qtype_with_combined_feedback_renderer {
 //                                        array($params));
 //        $output .= html_writer::tag('div', $hiddenfields, array('class'=>'ddform'));
 //        return $output;
+        
+        
+//        $output .= html_writer::tag('div',
+//                $droparea . $dragitems . $dropzones . $hiddens, array('class'=>'ddarea'));
+//        $topnode = 'div#q'.$qa->get_slot().' div.ddarea';
+//        $params = array('drops' => $question->places,
+//                        'topnode' => $topnode,
+//                        'readonly' => $options->readonly);
+        
     }
 }
