@@ -37,58 +37,47 @@ class qtype_vdmarker_edit_form extends question_edit_form {
     public function qtype() {
         return 'vdmarker';
     }
+    
+    /**
+     * Add settings for each area on Venn's diagram (with 3 circles).
+     * 
+     * @param object $mform the form being built.
+     */
+    private function add_areas($mform, $label, $gradeoptions) {
+        for ($i = 0; $i < 8; $i++) {
+            $mform->addElement('header', "answerhdr[$i]", str_ireplace('{no}', ($i + 1), $label));
 
+            //todo: Insert the visual vd component in readonly mode.
+            //      Don't know yet how to configure the vd per answer
+
+            $mform->addElement('select', "fractionselected[$i]",
+                               get_string('grade_when_selected', 'qtype_vdmarker'), 
+                               $gradeoptions);
+            $mform->addElement('select', "fractionnotselected[$i]",
+                               get_string('grade_when_not_selected', 'qtype_vdmarker'), 
+                               $gradeoptions);
+
+            $mform->addElement('editor', "feedback[$i]",
+                               get_string('feedback', 'question'), 
+                               array('rows' => 1), $this->editoroptions);
+        }
+    }
+
+    /**
+     * Add question-type specific form fields.
+     * TODO: more comments
+     *
+     * @param object $mform the form being built.
+     */
     protected function definition_inner($mform) {
-        $this->add_per_answer_fields($mform, 'label',
-                question_bank::fraction_options_full(), 8);
+        $this->add_areas($mform, 
+                         get_string('area_header', 'qtype_vdmarker', '{no}'),
+                         question_bank::fraction_options_full());
 
         $this->add_combined_feedback_fields(true);
 
-// todo: what's that?
-//        $this->add_interactive_settings(true, true);
+        $this->add_interactive_settings(true, true);
    }
-
-     protected function add_per_answer_fields(&$mform, $label, $gradeoptions,
-            $minoptions = QUESTION_NUMANS_START, $addoptions = QUESTION_NUMANS_ADD) {
-        $answersoption = '';
-        $repeatedoptions = array();
-
-        $repeated = $this->get_per_answer_fields($mform, $label, $gradeoptions,
-                $repeatedoptions, $answersoption);
-
-        //todo: replace this with our own, so that the vd get's correct parameters
-        $this->repeat_elements($repeated, $repeatsatstart, $repeatedoptions,
-                'noanswers', 'addanswers', $addoptions,
-                get_string('addmorechoiceblanks', 'qtype_multichoice'));
-    }
-
-    // todo: maybe need to use add_per_answer_fields instead and repeat manually
-    protected function get_per_answer_fields($mform, $label, $gradeoptions,
-            &$repeatedoptions, &$answersoption) {
-        $repeated = array();
-        
-        //todo: remove later - this should not be needed in our case
-        $repeated[] = $mform->createElement('header', 'answerhdr', $label);
-        
-        //todo: This should be replaced by the visual vd component in readonly mode.
-        //      Don't know yet how to configure the vd per answer
-        $repeated[] = $mform->createElement('editor', 'answer',
-                get_string('answer', 'question'), array('rows' => 1), $this->editoroptions);
-        
-        $repeated[] = $mform->createElement('select', 'fractionselected',
-                get_string('grade_when_selected', 'qtype_vdmarker'), $gradeoptions);
-        $repeated[] = $mform->createElement('select', 'fractionnotselected',
-                get_string('grade_when_not_selected', 'qtype_vdmarker'), $gradeoptions);
-
-        $repeated[] = $mform->createElement('editor', 'feedback',
-                get_string('feedback', 'question'), array('rows' => 1), $this->editoroptions);
-        
-        //todo: find out what these do, seem to be standard
-        $repeatedoptions['answer']['type'] = PARAM_RAW;
-        $repeatedoptions['fraction']['default'] = 0;
-        $answersoption = 'answers';
-        return $repeated;
-    }
 
     public function validation($data, $files) {
         $errors = parent::validation($data, $files);
