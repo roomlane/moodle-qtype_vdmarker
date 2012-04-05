@@ -28,4 +28,4 @@ defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'qtype_vdmarker';
 $plugin->version  = 2012040400;
-$plugin->requires = 2012032900;
+$plugin->requires = 2011070105.03;
