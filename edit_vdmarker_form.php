@@ -26,6 +26,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+require_once($CFG->dirroot . '/question/type/vdmarker/venndiagram.php');
+
 /**
  * Drag-and-drop images onto images  editing form definition.
  *
@@ -47,8 +49,11 @@ class qtype_vdmarker_edit_form extends question_edit_form {
         for ($i = 0; $i < 8; $i++) {
             $mform->addElement('header', "answerhdr[$i]", str_ireplace('{no}', ($i + 1), $label));
 
-            //todo: Insert the visual vd component in readonly mode.
-            //      Don't know yet how to configure the vd per answer
+            $vd = new qtype_vdmarker_vd3("$i");
+            $vd->readonly = true;
+            $vd->set_state( pow(2, $i) );
+            $mform->addElement('static', 'diagram', '', $vd->render());
+            unset($vd);
 
             $mform->addElement('select', "fractionselected[$i]",
                                get_string('grade_when_selected', 'qtype_vdmarker'), 

@@ -2,7 +2,15 @@ div.vd-holder {
   position:relative;
   cursor:crosshair;
   }
+div.vd-holder-ro {
+  position:relative;
+  }
 img.vd-overlay {
+  position:absolute;
+  top:0px;
+  left:0px;
+  }
+img.vd-overlay-ro {
   position:absolute;
   top:0px;
   left:0px;

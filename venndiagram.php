@@ -92,6 +92,31 @@ class qtype_vdmarker_vd3 {
         $this->ID = $ID;
     }
     
+    public function render() {
+        global $CFG;
+        
+        //TODO: use html_writer::tag
+        
+        $html = '';
+        $path = $CFG->httpswwwroot .'/question/type/vdmarker/pix/';
+        if ($this->readonly) {
+            // output static html, no JavaScript
+            $html .= '<div class="vd-holder-ro">';
+            
+            $html .= '<img src="' . $path . '3c.png" />';
+            for ($i = 0; $i < 8; $i++) {
+                if ($this->areastate[$i]) {
+                    $html .= '<img src="' . $path . '3c' . $i. '.png" class="vd-overlay-ro" />';
+                }
+            }
+            $html .= '</div>';
+        } else {
+            //!
+        }
+        
+        return $html;
+    }
+    
     public function get_state() {
         return $this->state;
     }
@@ -102,11 +127,11 @@ class qtype_vdmarker_vd3 {
     
     public function set_state($state) {
         $this->state = $state;
-        $this->areastate = state_to_areastate($state);        
+        $this->areastate = $this->state_to_areastate($state);        
     }
     
     public function set_areastate($areastate) {
-        $this->state = areastate_to_state($areastate);
+        $this->state = $this->areastate_to_state($areastate);
         $this->areastate = $areastate;
     }
     
@@ -118,12 +143,14 @@ class qtype_vdmarker_vd3 {
      */
     public static function state_to_areastate($state) {
         $a = array();
+        $one = 1;
         for ($i = 0; $i < 8; $i++) {
-            if ( 0 == ($state % pow(2, $i)) ) {
+            if ($state & $one) {
                 $a[] = true;
             } else {
                 $a[] = false;
             }
+            $one = $one << 1;
         }
         return $a;
     }
