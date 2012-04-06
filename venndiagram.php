@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
  * Venn's diagram of 3 circles.
  * U - umivese
@@ -67,7 +69,7 @@ class qtype_vdmarker_vd3 {
      *  
      * @var array of bool
      */
-    public $areastate;
+    protected $areastate = array(true, true, true, true, true, true, true, true);
 
     /**
      * {@see $areastate}
@@ -84,10 +86,28 @@ class qtype_vdmarker_vd3 {
      *  
      * @var byte
      */
-    public $state;
+    protected $state = 255;
     
     public function __construct($ID) {
         $this->ID = $ID;
+    }
+    
+    public function get_state() {
+        return $this->state;
+    }
+    
+    public function get_areastate() {
+        return $this->areastate;
+    }
+    
+    public function set_state($state) {
+        $this->state = $state;
+        $this->areastate = state_to_areastate($state);        
+    }
+    
+    public function set_areastate($areastate) {
+        $this->state = areastate_to_state($areastate);
+        $this->areastate = $areastate;
     }
     
     /**
