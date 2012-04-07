@@ -27,34 +27,52 @@ defined('MOODLE_INTERNAL') || die();
  */ 
 class qtype_vdmarker_question extends question_graded_automatically {
 
-//    public function grade_response(array $response) {
-//        list($right, $total) = $this->get_num_parts_right($response);
-//        $fraction = $right / $total;
-//        return array($fraction, question_state::graded_state_for_fraction($fraction));
-//    }
+    public function get_expected_data() {
+        $vars = array();
 
-//    public function compute_final_grade($responses, $totaltries) {
-//        $maxitemsdragged = 0;
-//        $wrongtries = array();
-//        foreach ($responses as $i => $response) {
-//            $maxitemsdragged = max($maxitemsdragged,
-//                                                $this->total_number_of_items_dragged($response));
-//            $hits = $this->choose_hits($response);
-//            foreach ($hits as $place => $choiceitem) {
-//                if (!isset($wrongtries[$place])) {
-//                    $wrongtries[$place] = $i;
-//                }
-//            }
-//            foreach ($wrongtries as $place => $notused) {
-//                if (!isset($hits[$place])) {
-//                    unset($wrongtries[$place]);
-//                }
-//            }
-//        }
-//        $numtries = count($responses);
-//        $numright = count($wrongtries);
-//        $penalty = array_sum($wrongtries) * $this->penalty;
-//        $grade = ($numright - $penalty) / (max($maxitemsdragged, count($this->places)));
-//        return $grade;
-//    }
+        //TODO: replace with actual field name where the answer is stored by yui when
+        $vars['state'] = PARAM_INTEGER;
+        
+        return $vars;
+    }
+
+    public function get_correct_response() {
+        $response = array();
+        
+        //TODO: calculate the right answer accoring to question definition's area grades
+        $response['state'] = 0;
+        return $response;
+    }
+
+    public function get_validation_error(array $response) {
+        return '';
+    }
+
+    public function grade_response(array $response) {
+        
+        //TODO: calculate the acutal fraction according to question definition grades set by teacher
+        $fraction = 0;
+        
+        return array($fraction, question_state::graded_state_for_fraction($fraction));
+    }
+
+    public function is_complete_response(array $response) {
+        //TODO: if not answered yet then return fasle (when state is '')
+        
+        
+        return true;
+    }
+
+    public function is_same_response(array $prevresponse, array $newresponse) {
+        $fieldname = 'state';
+        if (!question_utils::arrays_same_at_key_integer($prevresponse, $newresponse, $fieldname)) {
+            return false;
+        }
+        return true;
+    }
+
+    public function summarise_response(array $response) {
+        return null;
+    }
+
 }

@@ -37,6 +37,12 @@ class qtype_vdmarker_renderer extends qtype_with_combined_feedback_renderer {
 
     public function formulation_and_controls(question_attempt $qa,
             question_display_options $options) {
+        $vd = new qtype_vdmarker_vd3( 'vdqa' . $qa->get_slot() );
+        
+        //!
+        
+        unset($vd);
+        
 //        global $PAGE, $OUTPUT;
 //
 //        $question = $qa->get_question();

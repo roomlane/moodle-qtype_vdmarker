@@ -88,18 +88,18 @@ class qtype_vdmarker_vd3 {
      */
     protected $state = 255;
     
-    public function __construct($ID) {
+    public function __construct($ID = '') {
         $this->ID = $ID;
     }
     
-    public function render() {
+    public function render(question_display_options $options = null) {
         global $CFG;
         
         //TODO: use html_writer::tag maybe?
         
         $html = '';
         $imagepath = $CFG->httpswwwroot .'/question/type/vdmarker/pix/';
-        if ($this->readonly) {
+        if ($this->readonly || $options->readonly) {
             // output static html, no JavaScript needed
             
             $overlays = '';
@@ -119,7 +119,7 @@ class qtype_vdmarker_vd3 {
             $overlays = '';
             for ($i = 0; $i < 8; $i++) {
                     $overlays .= html_writer::empty_tag('img', array('src'   => "{$imagepath}3c{$i}.png",
-                                                                     'class' => 'vd-overlay-ro',
+                                                                     'class' => 'vd-overlay',
                                                                      'id'    => "ov{$i}")); 
             }
             
@@ -128,9 +128,20 @@ class qtype_vdmarker_vd3 {
                                       array('class' => 'vd-holder',
                                             'id'    => $this->ID)
                                       );
+            
+            attach_js();
         }
         
         return $html;
+    }
+    
+    protected function attach_js() {
+        $params = array('topnode'       => $this->ID,
+                        'state'         => $this->state,
+                        'fieldtoupdate' => $this-fieldtoupdate);
+        $PAGE->requires->yui_module('moodle-qtype_vdmarker-vd',
+                                    'M.qtype_vdmarker.init_question',
+                                    $params);
     }
     
     public function get_state() {
