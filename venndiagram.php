@@ -98,20 +98,36 @@ class qtype_vdmarker_vd3 {
         //TODO: use html_writer::tag maybe?
         
         $html = '';
-        $path = $CFG->httpswwwroot .'/question/type/vdmarker/pix/';
+        $imagepath = $CFG->httpswwwroot .'/question/type/vdmarker/pix/';
         if ($this->readonly) {
             // output static html, no JavaScript needed
-            $html .= '<div class="vd-holder-ro">';
             
-            $html .= '<img src="' . $path . '3c.png" />';
+            $overlays = '';
             for ($i = 0; $i < 8; $i++) {
                 if ($this->areastate[$i]) {
-                    $html .= '<img src="' . $path . '3c' . $i. '.png" class="vd-overlay-ro" />';
+                    $overlays .= html_writer::empty_tag('img', array('src'   => "{$imagepath}3c{$i}.png",
+                                                                     'class' => 'vd-overlay-ro')); 
                 }
             }
-            $html .= '</div>';
+            
+            $html .= html_writer::tag('div',
+                                      html_writer::empty_tag('img', array('src' => $imagepath . '3c.png')) . $overlays, 
+                                      array('class' => 'vd-holder-ro'));
         } else {
-            //!
+            $html .= '<div class="vd-holder" id=' . $this->ID . '>';
+            
+            $overlays = '';
+            for ($i = 0; $i < 8; $i++) {
+                    $overlays .= html_writer::empty_tag('img', array('src'   => "{$imagepath}3c{$i}.png",
+                                                                     'class' => 'vd-overlay-ro',
+                                                                     'id'    => "ov{$i}")); 
+            }
+            
+            $html .= html_writer::tag('div',
+                                      html_writer::empty_tag('img', array('src' => $imagepath . '3c.png')) . $overlays, 
+                                      array('class' => 'vd-holder',
+                                            'id'    => $this->ID)
+                                      );
         }
         
         return $html;
