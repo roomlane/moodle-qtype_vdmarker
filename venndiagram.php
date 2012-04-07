@@ -129,16 +129,25 @@ class qtype_vdmarker_vd3 {
                                             'id'    => $this->ID)
                                       );
             
-            attach_js();
+            $this->attach_js();
         }
         
         return $html;
     }
     
     protected function attach_js() {
+        global $PAGE;
+        //TODO: get circles from json file in pix direcotry (not there yet)
+        $circles = array('radius' => 60,
+                         'c1' => array(80, 80),
+                         'c2' => array(140, 80),
+                         'c3' => array(110, 132));
+        
         $params = array('topnode'       => $this->ID,
                         'state'         => $this->state,
-                        'fieldtoupdate' => $this-fieldtoupdate);
+                        'fieldtoupdate' => $this->fieldtoupdate,
+                        'circles'       => $circles);
+        
         $PAGE->requires->yui_module('moodle-qtype_vdmarker-vd',
                                     'M.qtype_vdmarker.init_question',
                                     $params);

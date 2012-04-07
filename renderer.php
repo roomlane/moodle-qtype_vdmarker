@@ -24,8 +24,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */ 
 
-
 defined('MOODLE_INTERNAL') || die();
+
+require_once($CFG->dirroot . '/question/type/vdmarker/venndiagram.php');
 
 /**
  * Generates the output for drag-and-drop markers questions.
@@ -37,40 +38,26 @@ class qtype_vdmarker_renderer extends qtype_with_combined_feedback_renderer {
 
     public function formulation_and_controls(question_attempt $qa,
             question_display_options $options) {
+        $question = $qa->get_question();
+//        $response = $qa->get_last_qt_data();
+
+        $questiontext = $question->format_questiontext($qa);
+
+        $output = html_writer::tag('div', $questiontext, array('class' => 'qtext'));
+        
         $vd = new qtype_vdmarker_vd3( 'vdqa' . $qa->get_slot() );
+        //TODO: get the state from last attempt
         
-        //!
+        //TODO: Set the name
+        $vd->fieldtoupdate = 'vdstate' . $qa->get_slot();
         
+        $hiddenfield = array('type'  => 'hidden',
+                             'name'  => $vd->fieldtoupdate,
+                             'value' => $vd->get_state());
+        $output .= html_writer::empty_tag('input', $hiddenfield);
+        $output .= $vd->render($options);
         unset($vd);
         
-//        global $PAGE, $OUTPUT;
-//
-//        $question = $qa->get_question();
-//        $response = $qa->get_last_qt_data();
-//
-//        $questiontext = $question->format_questiontext($qa);
-//
-//        $output = html_writer::tag('div', $questiontext, array('class' => 'qtext'));
-//
-//        $bgimage = self::get_url_for_image($qa, 'bgimage');
-//
-//        $img = html_writer::empty_tag('img',
-//                                        array('src'=>$bgimage,
-//                                        'class'=>'dropbackground',
-//                                        'alt' => get_string('dropbackground', 'qtype_ddmarker')));
-//        $PAGE->requires->yui_module('moodle-qtype_ddmarker-dd',
-//                                        'M.qtype_ddmarker.init_question',
-//                                        array($params));
-//        $output .= html_writer::tag('div', $hiddenfields, array('class'=>'ddform'));
-//        return $output;
-        
-        
-//        $output .= html_writer::tag('div',
-//                $droparea . $dragitems . $dropzones . $hiddens, array('class'=>'ddarea'));
-//        $topnode = 'div#q'.$qa->get_slot().' div.ddarea';
-//        $params = array('drops' => $question->places,
-//                        'topnode' => $topnode,
-//                        'readonly' => $options->readonly);
-        
+        return $output;
     }
 }
