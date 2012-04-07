@@ -95,12 +95,12 @@ class qtype_vdmarker_vd3 {
     public function render() {
         global $CFG;
         
-        //TODO: use html_writer::tag
+        //TODO: use html_writer::tag maybe?
         
         $html = '';
         $path = $CFG->httpswwwroot .'/question/type/vdmarker/pix/';
         if ($this->readonly) {
-            // output static html, no JavaScript
+            // output static html, no JavaScript needed
             $html .= '<div class="vd-holder-ro">';
             
             $html .= '<img src="' . $path . '3c.png" />';

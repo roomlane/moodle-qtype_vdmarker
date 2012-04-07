@@ -31,5 +31,7 @@ $string['vdmarkersummary'] = 'Mark areas of the Venn diagram.';
 $string['vdmarker_help'] = 'Teacher can define the question (a set theory formula) and marks for every reagion on Venn diagram. Student can click on Venn diagram to mark regions selected or unselected.';
 $string['grade_when_selected'] = 'Grade when selected';
 $string['grade_when_not_selected'] = 'Grade when not selected';
-$string['area_header'] = 'Area {$a}';
+$string['area_header'] = 'Area {$a}'; // on question editing form
+$string['edit_preview_caption'] = ''; // text that appears left from the diagram on the question editing form
+
 // TODO add any other requred strings.

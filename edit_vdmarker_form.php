@@ -29,7 +29,7 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot . '/question/type/vdmarker/venndiagram.php');
 
 /**
- * Drag-and-drop images onto images  editing form definition.
+ * Venn diagram marking question definition editing form.
  *
  * @copyright  2009 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -42,6 +42,7 @@ class qtype_vdmarker_edit_form extends question_edit_form {
     
     /**
      * Add settings for each area on Venn's diagram (with 3 circles).
+     * Consider each area a multichoice answer
      * 
      * @param object $mform the form being built.
      */
@@ -51,17 +52,20 @@ class qtype_vdmarker_edit_form extends question_edit_form {
 
             $vd = new qtype_vdmarker_vd3("$i");
             $vd->readonly = true;
-            $vd->set_state( pow(2, $i) );
-            $mform->addElement('static', 'diagram', '', $vd->render());
+            $vd->set_state( pow(2, $i) ); // show only the single area marked
+            $mform->addElement('static', 'diagram', get_string('edit_preview_caption', 'qtype_vdmarker'), $vd->render());
             unset($vd);
 
+            // fraction of grade when selected
             $mform->addElement('select', "fractionselected[$i]",
                                get_string('grade_when_selected', 'qtype_vdmarker'), 
                                $gradeoptions);
+            // penalty when selected
             $mform->addElement('select', "fractionnotselected[$i]",
                                get_string('grade_when_not_selected', 'qtype_vdmarker'), 
                                $gradeoptions);
 
+            //TODO: not sure if this is needed at all
             $mform->addElement('editor', "feedback[$i]",
                                get_string('feedback', 'question'), 
                                array('rows' => 1), $this->editoroptions);
@@ -70,7 +74,6 @@ class qtype_vdmarker_edit_form extends question_edit_form {
 
     /**
      * Add question-type specific form fields.
-     * TODO: more comments
      *
      * @param object $mform the form being built.
      */
