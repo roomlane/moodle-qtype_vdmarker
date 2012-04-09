@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -26,9 +27,9 @@ defined('MOODLE_INTERNAL') || die();
  * @author     immor@hot.ee
  * @copyright  &copy; 2012 Rommi Saar
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */ 
+ */
 class qtype_vdmarker_vd3 {
-    
+
     /**
      * Does not chagne the value of {@see $fieldtoupdate}.
      * Does not change it's state when clicked on it.
@@ -36,7 +37,7 @@ class qtype_vdmarker_vd3 {
      * @var bool 
      */
     public $readonly;
-    
+
     /**
      * div id that is used by YUI to connect JavaScript and settings to html element.
      * Sometihng like 'div#q'.$qa->get_slot().' div.vd-holder';
@@ -44,14 +45,14 @@ class qtype_vdmarker_vd3 {
      * @var string 
      */
     public $ID;
-    
+
     /**
      * (Hidden) form filed to write the state.
      * 
      * @var string 
      */
     public $fieldtoupdate;
-    
+
     /**
      * {@see $state}
      * {@see state_to_areastate}
@@ -86,92 +87,87 @@ class qtype_vdmarker_vd3 {
      *  
      * @var byte
      */
-    protected $state = 3;//255;
-    
+    protected $state = 3; //255;
+
     public function __construct($ID = '') {
         $this->ID = $ID;
     }
-    
+
     public function render(question_display_options $options = null) {
         global $CFG;
-        
+
         //TODO: use html_writer::tag maybe?
-        
+
         $html = '';
-        $imagepath = $CFG->httpswwwroot .'/question/type/vdmarker/pix/';
+        $imagepath = $CFG->httpswwwroot . '/question/type/vdmarker/pix/';
         if ($this->readonly || $options->readonly) {
             // output static html, no JavaScript needed
-            
+
             $overlays = '';
             for ($i = 0; $i < 8; $i++) {
                 if ($this->areastate[$i]) {
-                    $overlays .= html_writer::empty_tag('img', array('src'   => "{$imagepath}3c{$i}.png",
-                                                                     'class' => 'vd-overlay-ro')); 
+                    $overlays .= html_writer::empty_tag('img', array('src' => "{$imagepath}3c{$i}.png",
+                                'class' => 'vd-overlay-ro'));
                 }
             }
-            
-            $html .= html_writer::tag('div',
-                                      html_writer::empty_tag('img', array('src' => $imagepath . '3c.png')) . $overlays, 
-                                      array('class' => 'vd-holder-ro'));
+
+            $html .= html_writer::tag('div', html_writer::empty_tag('img', array('src' => $imagepath . '3c.png')) . $overlays, array('class' => 'vd-holder-ro'));
         } else {
             $html .= '<div class="vd-holder" id=' . $this->ID . '>';
-            
+
             $overlays = '';
             for ($i = 0; $i < 8; $i++) {
-                    $overlays .= html_writer::empty_tag('img', array('src'   => "{$imagepath}3c{$i}.png",
-                                                                     'class' => 'vd-overlay',
-                                                                     'id'    => "ov{$i}")); 
+                $overlays .= html_writer::empty_tag('img', array('src' => "{$imagepath}3c{$i}.png",
+                            'class' => 'vd-overlay',
+                            'id' => "ov{$i}"));
             }
             //TODO: add a "loading" image until js is attached and hides it. Afeter F5 in browser it can take some time to set up
-            
-            $html .= html_writer::tag('div',
-                                      html_writer::empty_tag('img', array('src' => $imagepath . '3c.png')) . $overlays, 
-                                      array('class' => 'vd-holder',
-                                            'id'    => $this->ID)
-                                      );
-            
+
+            $html .= html_writer::tag('div', html_writer::empty_tag('img', array('src' => $imagepath . '3c.png')) . $overlays, array('class' => 'vd-holder',
+                        'id' => $this->ID)
+            );
+
             $this->attach_js();
         }
-        
+
         return $html;
     }
-    
+
     protected function attach_js() {
         global $PAGE;
         //TODO: get circles from json file in pix direcotry (not there yet)
         $circles = array('radius' => 60,
-                         'c1' => array(80, 80),
-                         'c2' => array(140, 80),
-                         'c3' => array(110, 132));
-        
-        $params = array('topnode'       => $this->ID,
-                        'state'         => $this->state,
-                        'fieldtoupdate' => $this->fieldtoupdate,
-                        'circles'       => $circles);
-        
-        $PAGE->requires->yui_module('moodle-qtype_vdmarker-vd',
-                                    'M.qtype_vdmarker.init_vd',
-                                    array($params) );
+            'cnt' => 3,
+            'c1' => array(80, 80),
+            'c2' => array(140, 80),
+            'c3' => array(110, 132));
+
+        $params = array('topnode' => $this->ID,
+            'state' => $this->state,
+            'fieldtoupdate' => $this->fieldtoupdate,
+            'circles' => $circles);
+
+        $PAGE->requires->yui_module('moodle-qtype_vdmarker-vd', 'M.qtype_vdmarker.init_vd', array($params));
     }
-    
+
     public function get_state() {
         return $this->state;
     }
-    
+
     public function get_areastate() {
         return $this->areastate;
     }
-    
+
     public function set_state($state) {
         $this->state = $state;
-        $this->areastate = $this->state_to_areastate($state);        
+        $this->areastate = $this->state_to_areastate($state);
     }
-    
+
     public function set_areastate($areastate) {
         $this->state = $this->areastate_to_state($areastate);
         $this->areastate = $areastate;
     }
-    
+
     /**
      * Converts packed (byte) set to an array of bool where each element is an area on Venn's diagram
      * 
@@ -191,7 +187,7 @@ class qtype_vdmarker_vd3 {
         }
         return $a;
     }
-    
+
     /**
      * Converts array of bool to bitset (byte)
      * 
@@ -207,5 +203,5 @@ class qtype_vdmarker_vd3 {
         }
         return $s;
     }
- 
+
 }
