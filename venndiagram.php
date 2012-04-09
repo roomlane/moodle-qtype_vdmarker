@@ -149,8 +149,8 @@ class qtype_vdmarker_vd3 {
                         'circles'       => $circles);
         
         $PAGE->requires->yui_module('moodle-qtype_vdmarker-vd',
-                                    'M.qtype_vdmarker.init_question',
-                                    $params);
+                                    'M.qtype_vdmarker.init_vd',
+                                    array($params) );
     }
     
     public function get_state() {
