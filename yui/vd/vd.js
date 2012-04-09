@@ -5,7 +5,7 @@ YUI.add('moodle-qtype_vdmarker-vd', function(Y) {
     }
     Y.extend(VDMARKER_VD, Y.Base, {
         Y_topnode : null,
-        dom_topnode : null,
+//        dom_topnode : null,
         state : null,
         dom_fieldtoupdate : null,
         circles : null,
@@ -14,12 +14,13 @@ YUI.add('moodle-qtype_vdmarker-vd', function(Y) {
             
             var topnode = this.get('topnode');
             this.Y_topnode = Y.one('#' + topnode);
-            this.dom_topnode = document.getElementById(topnode);
+//            this.dom_topnode = document.getElementById(topnode);
             this.state = this.get('state');
             this.dom_fieldtoupdate = document.getElementById(this.get('fieldtoupdate'));
             this.circles = this.get('circles');
             
             this.draw();
+            //! hide the "loading" image
             
             this.Y_topnode.on('click', this.click, this);
         },
@@ -36,19 +37,20 @@ YUI.add('moodle-qtype_vdmarker-vd', function(Y) {
          */
         draw : function() {
             var areastates = this.state_to_areastates(this.state);
-            for (i = 0; i < 8; i++) {
-                var layer = dom_topnode.getElementById('ov' + i);
+            for (var i = 0; i < 8; i++) {
+                //TODO: cache the nodes in an array in init..
+                var overlay = this.Y_topnode.one('img.vd-overlay#ov' + i);
                 if (areastates[i]) {
-                    layer.style.visibility = "visible";
+                    overlay.show();
                 } else {
-                    layer.style.visibility = "hidden";
+                    overlay.hide();
                 }
             }
         },
         state_to_areastates : function(state) {
-            a = array();
-            one = 1;
-            for (i = 0; i < 8; i++) {
+            var a = new Array();
+            var one = 1;
+            for (var i = 0; i < 8; i++) {
                 if (state & one) {
                     a[i] = true;
                 } else {
