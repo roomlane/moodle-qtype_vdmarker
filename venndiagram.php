@@ -86,7 +86,7 @@ class qtype_vdmarker_vd3 {
      *  
      * @var byte
      */
-    protected $state = 255;
+    protected $state = 3;//255;
     
     public function __construct($ID = '') {
         $this->ID = $ID;
@@ -122,6 +122,7 @@ class qtype_vdmarker_vd3 {
                                                                      'class' => 'vd-overlay',
                                                                      'id'    => "ov{$i}")); 
             }
+            //TODO: add a "loading" image until js is attached and hides it. Afeter F5 in browser it can take some time to set up
             
             $html .= html_writer::tag('div',
                                       html_writer::empty_tag('img', array('src' => $imagepath . '3c.png')) . $overlays, 

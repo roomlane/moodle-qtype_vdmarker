@@ -4,17 +4,64 @@ YUI.add('moodle-qtype_vdmarker-vd', function(Y) {
         VDMARKER_VD.superclass.constructor.apply(this, arguments);
     }
     Y.extend(VDMARKER_VD, Y.Base, {
+        Y_topnode : null,
+        dom_topnode : null,
+        state : null,
+        dom_fieldtoupdate : null,
+        circles : null,
         initializer : function(config) { //'config' contains the parameter values
             alert('I am in initializer');
             
-            var Y_topnode = Y.one('#' + this.get('topnode'));
+            var topnode = this.get('topnode');
+            this.Y_topnode = Y.one('#' + topnode);
+            this.dom_topnode = document.getElementById(topnode);
+            this.state = this.get('state');
+            this.dom_fieldtoupdate = document.getElementById(this.get('fieldtoupdate'));
+            this.circles = this.get('circles');
             
-            //! register the OnClick event
-            Y_topnode.on('click', this.click, this);
+            this.draw();
+            
+            this.Y_topnode.on('click', this.click, this);
         },
-        click : function (e) {
+        click : function(e) {
             alert('click :)');
             //! mark an area
+            
+            this.draw();
+            this.save_to_field();
+        },
+        
+        /**
+         * Draws the state
+         */
+        draw : function() {
+            var areastates = this.state_to_areastates(this.state);
+            for (i = 0; i < 8; i++) {
+                var layer = dom_topnode.getElementById('ov' + i);
+                if (areastates[i]) {
+                    layer.style.visibility = "visible";
+                } else {
+                    layer.style.visibility = "hidden";
+                }
+            }
+        },
+        state_to_areastates : function(state) {
+            a = array();
+            one = 1;
+            for (i = 0; i < 8; i++) {
+                if (state & one) {
+                    a[i] = true;
+                } else {
+                    a[i] = false;
+                }
+                one = one << 1;
+            }
+            return a;
+        },
+        save_to_field : function() {
+            if (this.dom_fieldtoupdate) {
+                this.dom_fieldtoupdate.value = this.state;
+            }
         }
     }, {
         NAME : VDMARKERVDNAME, //module name is something mandatory. 
@@ -22,7 +69,7 @@ YUI.add('moodle-qtype_vdmarker-vd', function(Y) {
                                 //as YUI use it for name space sometimes.
         ATTRS : {
                  topnode : {value : null},
-                 state : {value : null},
+                 state : {value : 255},
                  fieldtoupdate : {value : null},
                  circles : {value : null}
         } // Attributs are the parameters sent when the $PAGE->requires->yui_module calls the module. 
@@ -33,7 +80,7 @@ YUI.add('moodle-qtype_vdmarker-vd', function(Y) {
     M.qtype_vdmarker = M.qtype_vdmarker || {}; //this line use existing name path if it exists, ortherwise create a new one. 
                                                  //This is to avoid to overwrite previously loaded module with same name.
     M.qtype_vdmarker.init_vd = function(config) { //'config' contains the parameter values
-        alert('I am in the javascript module, Yeah!');
+        //alert('I am in the javascript module, Yeah!');
         return new VDMARKER_VD(config); //'config' contains the parameter values
     }
   }, '@VERSION@', {
