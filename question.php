@@ -31,7 +31,7 @@ class qtype_vdmarker_question extends question_graded_automatically {
         $vars = array();
 
         //TODO: replace with actual field name where the answer is stored by yui when
-        $vars['state'] = PARAM_INTEGER;
+        $vars[$this->field()] = PARAM_INTEGER;
         
         return $vars;
     }
@@ -40,7 +40,7 @@ class qtype_vdmarker_question extends question_graded_automatically {
         $response = array();
         
         //TODO: calculate the right answer accoring to question definition's area grades
-        $response['state'] = 0;
+        $response[$this->field()] = 0;
         return $response;
     }
 
@@ -64,8 +64,7 @@ class qtype_vdmarker_question extends question_graded_automatically {
     }
 
     public function is_same_response(array $prevresponse, array $newresponse) {
-        $fieldname = 'state';
-        if (!question_utils::arrays_same_at_key_integer($prevresponse, $newresponse, $fieldname)) {
+        if (!question_utils::arrays_same_at_key_integer($prevresponse, $newresponse, $this->field())) {
             return false;
         }
         return true;
@@ -73,6 +72,15 @@ class qtype_vdmarker_question extends question_graded_automatically {
 
     public function summarise_response(array $response) {
         return null;
+    }
+    
+    /**
+     * Get the input filed name without question etempt specific prefix
+     * 
+     * @return string name of the field name where the resulting Venn diagram state will be put by JavaScript
+     */
+    public function field() {
+        return 'vdstate';
     }
 
 }

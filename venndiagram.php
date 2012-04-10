@@ -113,8 +113,6 @@ class qtype_vdmarker_vd3 {
 
             $html .= html_writer::tag('div', html_writer::empty_tag('img', array('src' => $imagepath . '3c.png')) . $overlays, array('class' => 'vd-holder-ro'));
         } else {
-            $html .= '<div class="vd-holder" id=' . $this->ID . '>';
-
             $overlays = '';
             for ($i = 0; $i < 8; $i++) {
                 $overlays .= html_writer::empty_tag('img', array('src' => "{$imagepath}3c{$i}.png",

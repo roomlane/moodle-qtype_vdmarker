@@ -13,7 +13,7 @@ YUI.add('moodle-qtype_vdmarker-vd', function(Y) {
             var topnode = this.get('topnode');
             this.Y_topnode = Y.one('#' + topnode);
             this.state = this.get('state');
-            this.Y_fieldtoupdate = Y.one('#' + this.get('fieldtoupdate'));
+            this.Y_fieldtoupdate = Y.one('#' + this.get('fieldtoupdate').replace(':', '_'));
             this.circles = this.get('circles');
             this.areas = Math.pow(2, this.circles.cnt);
             
