@@ -137,10 +137,12 @@ class qtype_vdmarker_vd3 {
         global $PAGE;
         //TODO: get circles from json file in pix direcotry (not there yet)
         $circles = array('radius' => 60,
-            'cnt' => 3,
-            'c1' => array(80, 80),
-            'c2' => array(140, 80),
-            'c3' => array(110, 132));
+                         'cnt' => 3,
+                         'points' => array(array(80, 80),
+                                           array(140, 80),
+                                           array(110, 132)
+                                           )
+                         );
 
         $params = array('topnode' => $this->ID,
             'state' => $this->state,

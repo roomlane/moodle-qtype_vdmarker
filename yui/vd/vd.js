@@ -35,10 +35,10 @@ YUI.add('moodle-qtype_vdmarker-vd', function(Y) {
             var radius = this.circles.radius;
             for (var i = 0; i < this.circles.cnt; i++)
             {
-                var dx = Math.abs(x - circles[i][0]);
-                var dy = Math.abs(y - circles[i][1]);
+                var dx = Math.abs(x - this.circles.points[i][0]);
+                var dy = Math.abs(y - this.circles.points[i][1]);
                 if (radius * radius >= dx * dx + dy * dy) {
-                res += Math.pow(2, i);
+                    res += Math.pow(2, i);
                 }
             }
             return res;
@@ -48,9 +48,9 @@ YUI.add('moodle-qtype_vdmarker-vd', function(Y) {
             this.state = this.state ^ substate;
         },
         click : function(e) {
-            //TODO: is there a yui normalization for the relative position?
-            var pos_x = e.offsetX?(e.offsetX):e.pageX-e.currenttarget.offsetLeft; //! offset Left not defined
-            var pos_y = e.offsetY?(e.offsetY):e.pageY-e.currenttarget.offsetTop;
+            var div_pos = this.Y_topnode.getXY();
+            var pos_x = e.pageX - div_pos[0];
+            var pos_y = e.pageY - div_pos[1];
             
             this.toggle_state_by_offset(pos_x, pos_y);
             
