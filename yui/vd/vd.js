@@ -6,16 +6,14 @@ YUI.add('moodle-qtype_vdmarker-vd', function(Y) {
     Y.extend(VDMARKER_VD, Y.Base, {
         Y_topnode : null,
         state : null,
-        dom_fieldtoupdate : null,
+        Y_fieldtoupdate : null,
         circles : null,
         areas : null,
         initializer : function(config) { //'config' contains the parameter values
-            alert('I am in initializer');
-            
             var topnode = this.get('topnode');
             this.Y_topnode = Y.one('#' + topnode);
             this.state = this.get('state');
-            this.dom_fieldtoupdate = document.getElementById(this.get('fieldtoupdate'));
+            this.Y_fieldtoupdate = Y.one('#' + this.get('fieldtoupdate'));
             this.circles = this.get('circles');
             this.areas = Math.pow(2, this.circles.cnt);
             
@@ -87,8 +85,8 @@ YUI.add('moodle-qtype_vdmarker-vd', function(Y) {
             return a;
         },
         save_to_field : function() {
-            if (this.dom_fieldtoupdate) {
-                this.dom_fieldtoupdate.value = this.state;
+            if (this.Y_fieldtoupdate) {
+                this.Y_fieldtoupdate.set('value', this.state);
             }
         }
     }, {

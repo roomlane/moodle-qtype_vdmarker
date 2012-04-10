@@ -53,6 +53,7 @@ class qtype_vdmarker_renderer extends qtype_with_combined_feedback_renderer {
         
         $hiddenfield = array('type'  => 'hidden',
                              'name'  => $vd->fieldtoupdate,
+                             'id'  => $vd->fieldtoupdate,
                              'value' => $vd->get_state());
         $output .= html_writer::empty_tag('input', $hiddenfield);
         $output .= $vd->render($options);
