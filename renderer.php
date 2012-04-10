@@ -48,9 +48,7 @@ class qtype_vdmarker_renderer extends qtype_with_combined_feedback_renderer {
         $vd = new qtype_vdmarker_vd3( str_replace(':', '_', $qa->get_qt_field_name('vdqa')) );
         //TODO: get the state from last attempt
         
-        //TODO: Set the name 
         $vd->fieldtoupdate = $qa->get_qt_field_name( $question->field() );
-        //'vdstate' . $qa->get_slot();
         
         $hiddenfield = array('type'  => 'hidden',
                              'name'  => $vd->fieldtoupdate,
