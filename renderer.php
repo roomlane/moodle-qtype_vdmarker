@@ -39,14 +39,27 @@ class qtype_vdmarker_renderer extends qtype_with_combined_feedback_renderer {
     public function formulation_and_controls(question_attempt $qa,
             question_display_options $options) {
         $question = $qa->get_question();
-//        $response = $qa->get_last_qt_data();
 
         $questiontext = $question->format_questiontext($qa);
 
         $output = html_writer::tag('div', $questiontext, array('class' => 'qtext'));
         
         $vd = new qtype_vdmarker_vd3( str_replace(':', '_', $qa->get_qt_field_name('vdqa')) );
-        //TODO: get the state from last attempt
+
+        $response = $question->get_response($qa);
+        $vd->set_state($response);
+                
+        $vd->readonly = $options->readonly;
+        //TODO: $qa->clearwrong
+        //TODO: $qa->correctness
+        //TODO: $qa->feedback
+        //TODO: $qa->numpartscorrect
+        //TODO: $qa->generalfeedback
+        //TODO: $qa->rightanswer
+        //TODO: $qa->numpartscorrect
+        //TODO: $qa->numpartscorrect
+        //TODO: $qa->numpartscorrect
+        //TODO: $qa->numpartscorrect
         
         $vd->fieldtoupdate = $qa->get_qt_field_name( $question->field() );
         

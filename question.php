@@ -83,4 +83,13 @@ class qtype_vdmarker_question extends question_graded_automatically {
         return 'vdstate';
     }
 
+    /**
+     * Last response
+     * 
+     * @param question_attempt $qa
+     * @return int, null if no previous attempt 
+     */
+    public function get_response(question_attempt $qa) {
+        return $qa->get_last_qt_var($this->field(), null);
+    }
 }

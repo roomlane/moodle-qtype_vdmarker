@@ -4,12 +4,12 @@ YUI.add('moodle-qtype_vdmarker-vd', function(Y) {
         VDMARKER_VD.superclass.constructor.apply(this, arguments);
     }
     Y.extend(VDMARKER_VD, Y.Base, {
-        Y_topnode : null,
-        state : null,
-        Y_fieldtoupdate : null,
-        circles : null,
-        areas : null,
-        initializer : function(config) { //'config' contains the parameter values
+        Y_topnode: null,
+        state: null,
+        Y_fieldtoupdate: null,
+        circles: null,
+        areas: null,
+        initializer: function(config) { //'config' contains the parameter values
             var topnode = this.get('topnode');
             this.Y_topnode = Y.one('#' + topnode);
             this.state = this.get('state');
@@ -22,13 +22,13 @@ YUI.add('moodle-qtype_vdmarker-vd', function(Y) {
             
             this.Y_topnode.on('click', this.click, this);
         },
-        hide_loading : function() {
+        hide_loading: function() {
             var img_loading = this.Y_topnode.one('img.vd-overlay#loading');
             if (img_loading) {
                 img_loading.hide();
             }
         },
-        circles_encoded : function(x, y) {
+        circles_encoded: function(x, y) {
             var res = 0;
             var radius = this.circles.radius;
             for (var i = 0; i < this.circles.cnt; i++)
@@ -41,11 +41,11 @@ YUI.add('moodle-qtype_vdmarker-vd', function(Y) {
             }
             return res;
         },
-        toggle_state_by_offset : function(x, y) {
+        toggle_state_by_offset: function(x, y) {
             var substate = 1 << this.circles_encoded(x, y);
             this.state = this.state ^ substate;
         },
-        click : function(e) {
+        click: function(e) {
             var div_pos = this.Y_topnode.getXY();
             var pos_x = e.pageX - div_pos[0];
             var pos_y = e.pageY - div_pos[1];
@@ -59,7 +59,7 @@ YUI.add('moodle-qtype_vdmarker-vd', function(Y) {
         /**
          * Draws the state
          */
-        draw : function() {
+        draw: function() {
             var areastates = this.state_to_areastates(this.state);
             for (var i = 0; i < this.areas; i++) {
                 //TODO: cache the nodes in an array in init..
@@ -71,7 +71,7 @@ YUI.add('moodle-qtype_vdmarker-vd', function(Y) {
                 }
             }
         },
-        state_to_areastates : function(state) {
+        state_to_areastates: function(state) {
             var a = new Array();
             var one = 1;
             for (var i = 0; i < this.areas; i++) {
@@ -84,26 +84,26 @@ YUI.add('moodle-qtype_vdmarker-vd', function(Y) {
             }
             return a;
         },
-        save_to_field : function() {
+        save_to_field: function() {
             if (this.Y_fieldtoupdate) {
                 this.Y_fieldtoupdate.set('value', this.state);
             }
         }
     }, {
-        NAME : VDMARKERVDNAME, //module name is something mandatory. 
+        NAME: VDMARKERVDNAME, //module name is something mandatory. 
         //It should be in lower case without space 
         //as YUI use it for name space sometimes.
-        ATTRS : {
-            topnode : {
-                value : null
+        ATTRS: {
+            topnode: {
+                value: null
             },
-            state : {
-                value : 255
+            state: {
+                value: 255
             },
-            fieldtoupdate : {
-                value : null
+            fieldtoupdate: {
+                value: null
             },
-            circles : {
+            circles: {
                 value : null
             }
         } // Attributs are the parameters sent when the $PAGE->requires->yui_module calls the module. 
