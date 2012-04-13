@@ -41,47 +41,40 @@ class qtype_vdmarker_edit_form extends question_edit_form {
     }
     
     /**
-     * Add settings for each area on Venn's diagram (with 3 circles).
-     * Consider each area a multichoice answer
-     * 
-     * @param object $mform the form being built.
-     */
-    private function add_areas($mform, $label, $gradeoptions) {
-        for ($i = 0; $i < 8; $i++) {
-            $mform->addElement('header', "answerhdr[$i]", str_ireplace('{no}', ($i + 1), $label));
-
-            $vd = new qtype_vdmarker_vd3("$i");
-            $vd->readonly = true;
-            $vd->set_state( pow(2, $i) ); // show only the single area marked
-            $mform->addElement('static', 'diagram', get_string('edit_preview_caption', 'qtype_vdmarker'), $vd->render());
-            unset($vd);
-
-            // fraction of grade when selected
-            $mform->addElement('select', "fractionselected[$i]",
-                               get_string('grade_when_selected', 'qtype_vdmarker'), 
-                               $gradeoptions);
-            // penalty when selected
-            $mform->addElement('select', "fractionnotselected[$i]",
-                               get_string('grade_when_not_selected', 'qtype_vdmarker'), 
-                               $gradeoptions);
-
-            //TODO: not sure if this is needed at all
-            $mform->addElement('editor', "feedback[$i]",
-                               get_string('feedback', 'question'), 
-                               array('rows' => 1), $this->editoroptions);
-        }
-    }
-
-    /**
      * Add question-type specific form fields.
      *
      * @param object $mform the form being built.
      */
     protected function definition_inner($mform) {
-        $this->add_areas($mform, 
-                         get_string('area_header', 'qtype_vdmarker', '{no}'),
-                         question_bank::fraction_options_full());
+        
+        $vd = new qtype_vdmarker_vd3("correct_answer_vd");
+        $vd->readonly = false;
+        
+        //TODO: get from db or refault to 0
+        $vd->set_state(0);
+        $vd->fieldtoupdate = 'vdcorrectanswer';
+        $hiddenfield = array('type'  => 'hidden',
+                             'name'  => $vd->fieldtoupdate,
+                             'id'  => str_replace(':', '_', $vd->fieldtoupdate),
+                             'value' => $vd->get_state());
+        $mform->addElement('static', 'diagram', get_string('correct_answer', 'qtype_vdmarker'), $vd->render());
+        unset($vd);
+        
+        $penalties = array(
+            1.000,
+            0.125
+        );
+        $penaltyoptions = array();
+        foreach ($penalties as $penalty) {
+            $penaltyoptions["$penalty"] = (100 * $penalty) . '%';
+        }
+        $fldname = 'penaltyperwrongarea';
+        $mform->addElement('select', $fldname,
+                            get_string('penalty_per_wrong_area', 'qtype_vdmarker'), 
+                            $penaltyoptions);
+        $mform->setDefault($fldname, 0.125);
 
+        
         $this->add_combined_feedback_fields(true);
 
         $this->add_interactive_settings(true, true);

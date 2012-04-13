@@ -100,7 +100,7 @@ class qtype_vdmarker_vd3 {
 
         $html = '';
         $imagepath = $CFG->httpswwwroot . '/question/type/vdmarker/pix/';
-        if ($this->readonly || $options->readonly) {
+        if ($this->readonly || (($options !== null) && $options->readonly)) {
             // output static html, no JavaScript needed
 
             $overlays = '';
