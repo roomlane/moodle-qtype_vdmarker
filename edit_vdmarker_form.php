@@ -52,7 +52,7 @@ class qtype_vdmarker_edit_form extends question_edit_form {
         
         //TODO: get from db or refault to 0
         $vd->set_state(0);
-        $vd->fieldtoupdate = 'vdcorrectanswer';
+        $vd->fieldtoupdate = 'vd_correctanswer';
         $hiddenfield = array('type'  => 'hidden',
                              'name'  => $vd->fieldtoupdate,
                              'id'  => str_replace(':', '_', $vd->fieldtoupdate),
@@ -68,7 +68,7 @@ class qtype_vdmarker_edit_form extends question_edit_form {
         foreach ($penalties as $penalty) {
             $penaltyoptions["$penalty"] = (100 * $penalty) . '%';
         }
-        $fldname = 'penaltyperwrongarea';
+        $fldname = 'vd_penalty';
         $mform->addElement('select', $fldname,
                             get_string('penalty_per_wrong_area', 'qtype_vdmarker'), 
                             $penaltyoptions);
