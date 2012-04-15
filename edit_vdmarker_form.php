@@ -42,7 +42,7 @@ class qtype_vdmarker_edit_form extends question_edit_form {
     
     /**
      * Adds the fields for showing the Venn's diagram where teacher can define the areas of correct answer.
-     *      * 
+     * 
      * @param MoodleQuickForm $mform 
      */
     protected function add_vd_fields($mform) {
@@ -85,10 +85,4 @@ class qtype_vdmarker_edit_form extends question_edit_form {
 
         $this->add_interactive_settings(true, true);
    }
-
-    public function validation($data, $files) {
-        $errors = parent::validation($data, $files);
-        return $errors;
-    }
-
 }
