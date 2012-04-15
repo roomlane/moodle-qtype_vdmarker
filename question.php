@@ -37,6 +37,10 @@ class qtype_vdmarker_question extends question_graded_automatically {
         return array('vdstate' => 0);
     }
 
+    public function get_validation_error(array $response) {
+        return '';
+    }
+
     public function grade_response(array $response) {
         $correct = 0; //TODO: get actual value
         $penalty = 1; //TODO: get actual value
@@ -56,6 +60,10 @@ class qtype_vdmarker_question extends question_graded_automatically {
         return true;
     }
 
+    public function summarise_response(array $response) {
+        return null;
+    }
+    
     /**
      * Last response
      * 
