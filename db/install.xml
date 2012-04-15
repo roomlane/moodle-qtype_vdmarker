@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="question/type/vdmarker/db" VERSION="20120415" COMMENT="XMLDB file for Moodle question/type/vdmarker"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="qtype_vdmarker" COMMENT="qtype_vdmarker question definition">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="questionid"/>
+        <FIELD NAME="questionid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="id" NEXT="vd_correctanswer"/>
+        <FIELD NAME="vd_correctanswer" TYPE="int" LENGTH="1" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" COMMENT="The correct answer (coded) defined by teacher." PREVIOUS="questionid" NEXT="vd_penalty"/>
+        <FIELD NAME="vd_penalty" TYPE="number" LENGTH="12" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" DECIMALS="7" COMMENT="Penalty per wrongly answered area" PREVIOUS="vd_correctanswer"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="questionid"/>
+        <KEY NAME="questionid" TYPE="foreign" FIELDS="questionid" REFTABLE="question" REFFIELDS="id" PREVIOUS="primary"/>
+      </KEYS>
+    </TABLE>
+  </TABLES>
+</XMLDB>
