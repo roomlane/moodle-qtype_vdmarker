@@ -41,25 +41,27 @@ class qtype_vdmarker_edit_form extends question_edit_form {
     }
     
     /**
-     * Add question-type specific form fields.
-     *
-     * @param object $mform the form being built.
+     * Adds the fields for showing the Venn's diagram where teacher can define the areas of correct answer.
+     *      * 
+     * @param MoodleQuickForm $mform 
      */
-    protected function definition_inner($mform) {
-        
+    protected function add_vd_fields($mform) {
         $vd = new qtype_vdmarker_vd3("correct_answer_vd");
         $vd->readonly = false;
-        
-        //TODO: get from db or refault to 0
-        $vd->set_state(0);
+        $vd->set_state($this->question->options->vd_correctanswer);
         $vd->fieldtoupdate = 'vd_correctanswer';
-        $hiddenfield = array('type'  => 'hidden',
-                             'name'  => $vd->fieldtoupdate,
-                             'id'  => str_replace(':', '_', $vd->fieldtoupdate),
-                             'value' => $vd->get_state());
+        $mform->addElement('hidden', $vd->fieldtoupdate, $vd->get_state(), 'id="' . str_replace(':', '_', $vd->fieldtoupdate) . '"');
         $mform->addElement('static', 'diagram', get_string('correct_answer', 'qtype_vdmarker'), $vd->render());
         unset($vd);
-        
+    }
+    
+    /**
+     * Adds the combobox to select penalty for each incorrectly selected area.
+     * By default 12.5% (1/8) is selected 
+     * 
+     * @param MoodleQuickForm $mform
+     */
+    protected function add_penalty_fields($mform) {
         $penalties = array(
             1.000,
             0.125
@@ -73,7 +75,11 @@ class qtype_vdmarker_edit_form extends question_edit_form {
                             get_string('penalty_per_wrong_area', 'qtype_vdmarker'), 
                             $penaltyoptions);
         $mform->setDefault($fldname, 0.125);
+    }
 
+    protected function definition_inner($mform) {
+        $this->add_vd_fields($mform);
+        $this->add_penalty_fields($mform);
         
         $this->add_combined_feedback_fields(true);
 
