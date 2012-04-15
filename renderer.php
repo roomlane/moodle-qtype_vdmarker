@@ -44,33 +44,45 @@ class qtype_vdmarker_renderer extends qtype_with_combined_feedback_renderer {
 
         $output = html_writer::tag('div', $questiontext, array('class' => 'qtext'));
         
-        $vd = new qtype_vdmarker_vd3( str_replace(':', '_', $qa->get_qt_field_name('vdqa')) );
-
-        $response = $question->get_response($qa);
-        $vd->set_state($response);
-                
-        $vd->readonly = $options->readonly;
-        //TODO: $qa->clearwrong
-        //TODO: $qa->correctness
-        //TODO: $qa->feedback
-        //TODO: $qa->numpartscorrect
-        //TODO: $qa->generalfeedback
-        //TODO: $qa->rightanswer
-        //TODO: $qa->numpartscorrect
-        //TODO: $qa->numpartscorrect
-        //TODO: $qa->numpartscorrect
-        //TODO: $qa->numpartscorrect
+        $vdid = str_replace(':', '_', $qa->get_qt_field_name('vdqa'));
+        $vdstate = $question->get_response($qa);
         
-        $vd->fieldtoupdate = $qa->get_qt_field_name('vdstate');
+        if (question_display_options::VISIBLE == $options->rightanswer) {
+            $t = new html_table();
+            $t->attributes = array('class' => 'vd-vompare-table');
+            $t->head = array(get_string('answer', 'question'), get_string('correct_answer', 'qtype_vdmarker'));
+
+            $leftcell = $this->output_diagram_readonly($vdid . '_response', $vdstate);
+            $rightcell = $this->output_diagram_readonly($vdid . '_correct', $question->vd_correctanswer);
+ 
+            $t->data = array( array($leftcell, $rightcell) );
+            
+            $output .= html_writer::table($t);
+        } else if ($options->readonly) {
+            $output .= $this->output_diagram_readonly($vdid, $vdstate);
+        } else {
+            $output .= $this->output_diagram_interactive($vdid, $vdstate, $qa->get_qt_field_name('vdstate') );
+        }
+        return $output;
+    }
+    
+    private function output_diagram_readonly($id, $state) {
+        $vd = new qtype_vdmarker_vd3($id);
+        $vd->set_state($state);
+        $vd->readonly = true;
+        return $vd->render();
+    }
+    
+    private function output_diagram_interactive($id, $state, $fieldname) {
+        $vd = new qtype_vdmarker_vd3($id);
+        $vd->set_state($state);
+        $vd->fieldtoupdate = $fieldname;
         
         $hiddenfield = array('type'  => 'hidden',
                              'name'  => $vd->fieldtoupdate,
                              'id'  => str_replace(':', '_', $vd->fieldtoupdate),
                              'value' => $vd->get_state());
-        $output .= html_writer::empty_tag('input', $hiddenfield);
-        $output .= $vd->render($options);
-        unset($vd);
-        
-        return $output;
+        return html_writer::empty_tag('input', $hiddenfield) . 
+               $vd->render();
     }
 }

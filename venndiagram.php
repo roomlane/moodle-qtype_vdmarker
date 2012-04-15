@@ -93,14 +93,14 @@ class qtype_vdmarker_vd3 {
         $this->ID = $ID;
     }
 
-    public function render(question_display_options $options = null) {
+    public function render() {
         global $CFG;
 
         //TODO: use html_writer::tag maybe?
 
         $html = '';
         $imagepath = $CFG->httpswwwroot . '/question/type/vdmarker/pix/';
-        if ($this->readonly || (($options !== null) && $options->readonly)) {
+        if ($this->readonly) {
             // output static html, no JavaScript needed
 
             $overlays = '';
