@@ -27,14 +27,28 @@ require_once($CFG->dirroot . '/question/type/vdmarker/venndiagram.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */ 
 class qtype_vdmarker_question extends question_graded_automatically {
+    /**
+     * Penalty per wrongly answered area from question definition
+     * This variable is set by question engine automatically.
+     *  
+     * @var float 
+     */
+    public $vd_penalty = 0;
+    
+    /**
+     * Correct answer (coded) from question definition.
+     * This variable is set by question engine automatically.
+     *  
+     * @var byte 
+     */
+    public $vd_correctanswer = 0;
 
     public function get_expected_data() {
         return array('vdstate' => PARAM_INTEGER);
     }
 
     public function get_correct_response() {
-        //TODO: calculate the right answer accoring to question definition's area grades
-        return array('vdstate' => 0);
+        return array('vdstate' => $this->vd_correctanswer);
     }
 
     public function get_validation_error(array $response) {
@@ -42,10 +56,7 @@ class qtype_vdmarker_question extends question_graded_automatically {
     }
 
     public function grade_response(array $response) {
-        $correct = 0; //TODO: get actual value
-        $penalty = 1; //TODO: get actual value
-        $fraction = 1 - qtype_vdmarker_vd3::num_incorrect_areas($correct, $response->vdstate) * $penalty;
-        //TODO: calculate the acutal fraction according to question definition grades set by teacher
+        $fraction = 1 - qtype_vdmarker_vd3::num_incorrect_areas($this->vd_correctanswer, $response['vdstate']) * $this->vd_penalty;
         return array($fraction, question_state::graded_state_for_fraction($fraction));
     }
 

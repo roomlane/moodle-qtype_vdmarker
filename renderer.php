@@ -61,7 +61,7 @@ class qtype_vdmarker_renderer extends qtype_with_combined_feedback_renderer {
         //TODO: $qa->numpartscorrect
         //TODO: $qa->numpartscorrect
         
-        $vd->fieldtoupdate = $qa->get_qt_field_name( $question->field() );
+        $vd->fieldtoupdate = $qa->get_qt_field_name('vdstate');
         
         $hiddenfield = array('type'  => 'hidden',
                              'name'  => $vd->fieldtoupdate,

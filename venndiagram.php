@@ -217,7 +217,7 @@ class qtype_vdmarker_vd3 {
      * @return int 
      */
     public static function num_incorrect_areas($correctstate, $state) {
-        $diffbits = $state ^ $correctstate;
+        $diffbits = (int)$state ^ (int)$correctstate;
         $cnt = 0;
         $one = 1;
         for ($i = 0; $i < 8; $i++) {
