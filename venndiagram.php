@@ -202,11 +202,30 @@ class qtype_vdmarker_vd3 {
     public static function areastate_to_state($areastate) {
         $s = 0;
         for ($i = 0; $i < 8; $i++) {
-            if (true == $areastate[$i]) {
+            if (true === $areastate[$i]) {
                 $s += pow(2, $i);
             }
         }
         return $s;
     }
-
-}
+    
+    /**
+     * Calculates number incorrect areas
+     * 
+     * @param byte $correctstate
+     * @param byte $state
+     * @return int 
+     */
+    public static function num_incorrect_areas($correctstate, $state) {
+        $diffbits = $state ^ $correctstate;
+        $cnt = 0;
+        $one = 1;
+        for ($i = 0; $i < 8; $i++) {
+            if ($diffbits & $one) {
+                $cnt++;
+            }
+            $one = $one << 1;
+        }
+        return $cnt;
+    }
+ }

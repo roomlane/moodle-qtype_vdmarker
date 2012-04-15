@@ -15,6 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 defined('MOODLE_INTERNAL') || die();
+require_once($CFG->dirroot . '/question/type/vdmarker/venndiagram.php');
 
 /**
  * Venn diagram question definition class.
@@ -28,38 +29,23 @@ defined('MOODLE_INTERNAL') || die();
 class qtype_vdmarker_question extends question_graded_automatically {
 
     public function get_expected_data() {
-        $vars = array();
-
-        //TODO: replace with actual field name where the answer is stored by yui when
-        $vars['vdstate'] = PARAM_INTEGER;
-        
-        return $vars;
+        return array('vdstate' => PARAM_INTEGER);
     }
 
     public function get_correct_response() {
-        $response = array();
-        
         //TODO: calculate the right answer accoring to question definition's area grades
-        $response['vdstate'] = 0;
-        return $response;
-    }
-
-    public function get_validation_error(array $response) {
-        return '';
+        return array('vdstate' => 0);
     }
 
     public function grade_response(array $response) {
-        
+        $correct = 0; //TODO: get actual value
+        $penalty = 1; //TODO: get actual value
+        $fraction = 1 - qtype_vdmarker_vd3::num_incorrect_areas($correct, $response->vdstate) * $penalty;
         //TODO: calculate the acutal fraction according to question definition grades set by teacher
-        $fraction = 0;
-        
         return array($fraction, question_state::graded_state_for_fraction($fraction));
     }
 
     public function is_complete_response(array $response) {
-        //TODO: if not answered yet then return fasle (when state is '')
-        
-        
         return true;
     }
 
@@ -70,10 +56,6 @@ class qtype_vdmarker_question extends question_graded_automatically {
         return true;
     }
 
-    public function summarise_response(array $response) {
-        return null;
-    }
-    
     /**
      * Last response
      * 
