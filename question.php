@@ -31,7 +31,7 @@ class qtype_vdmarker_question extends question_graded_automatically {
         $vars = array();
 
         //TODO: replace with actual field name where the answer is stored by yui when
-        $vars[$this->field()] = PARAM_INTEGER;
+        $vars['vdstate'] = PARAM_INTEGER;
         
         return $vars;
     }
@@ -40,7 +40,7 @@ class qtype_vdmarker_question extends question_graded_automatically {
         $response = array();
         
         //TODO: calculate the right answer accoring to question definition's area grades
-        $response[$this->field()] = 0;
+        $response['vdstate'] = 0;
         return $response;
     }
 
@@ -64,7 +64,7 @@ class qtype_vdmarker_question extends question_graded_automatically {
     }
 
     public function is_same_response(array $prevresponse, array $newresponse) {
-        if (!question_utils::arrays_same_at_key_integer($prevresponse, $newresponse, $this->field())) {
+        if (!question_utils::arrays_same_at_key_integer($prevresponse, $newresponse, 'vdstate')) {
             return false;
         }
         return true;
@@ -75,21 +75,12 @@ class qtype_vdmarker_question extends question_graded_automatically {
     }
     
     /**
-     * Get the input filed name without question etempt specific prefix
-     * 
-     * @return string name of the field name where the resulting Venn diagram state will be put by JavaScript
-     */
-    public function field() {
-        return 'vdstate';
-    }
-
-    /**
      * Last response
      * 
      * @param question_attempt $qa
      * @return int, null if no previous attempt 
      */
     public function get_response(question_attempt $qa) {
-        return $qa->get_last_qt_var($this->field(), null);
+        return $qa->get_last_qt_var('vdstate', null);
     }
 }
