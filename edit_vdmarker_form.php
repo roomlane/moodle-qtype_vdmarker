@@ -48,7 +48,12 @@ class qtype_vdmarker_edit_form extends question_edit_form {
     protected function add_vd_fields($mform) {
         $vd = new qtype_vdmarker_vd3("correct_answer_vd");
         $vd->readonly = false;
-        $vd->set_state($this->question->options->vd_correctanswer);
+        if (isset($this->question->options)) {
+            $state = $this->question->options->vd_correctanswer;
+        } else {
+            $state = 0;
+        }
+        $vd->set_state($state);
         $vd->fieldtoupdate = 'vd_correctanswer';
         $mform->addElement('hidden', $vd->fieldtoupdate, $vd->get_state(), 'id="' . str_replace(':', '_', $vd->fieldtoupdate) . '"');
         $mform->addElement('static', 'diagram', get_string('correct_answer', 'qtype_vdmarker'), $vd->render());
