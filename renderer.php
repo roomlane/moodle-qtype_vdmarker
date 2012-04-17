@@ -49,7 +49,7 @@ class qtype_vdmarker_renderer extends qtype_with_combined_feedback_renderer {
         
         if (question_display_options::VISIBLE == $options->rightanswer) {
             $t = new html_table();
-            $t->attributes = array('class' => 'vd-vompare-table');
+            $t->attributes = array('class' => 'vd-compare-table');
             $t->head = array(get_string('answer', 'question'), get_string('correct_answer', 'qtype_vdmarker'));
 
             $leftcell = $this->output_diagram_readonly($vdid . '_response', $vdstate);
