@@ -26,7 +26,7 @@
 
 $string['addingvdmarker'] = 'Adding Venn diagram marker.';
 $string['editingvdmarker'] = 'Editing Venn diagram marker.';
-$string['vdmarker'] = 'Venn diagram marker.';
+$string['vdmarker'] = 'Venn diagram marker';
 $string['vdmarkersummary'] = 'Mark areas of the Venn diagram.';
 $string['vdmarker_help'] = 'Teacher can define the question (a set theory formula) and marks for every reagion on Venn diagram. Student can click on Venn diagram to mark regions selected or unselected.';
 $string['penalty_per_wrong_area'] = 'Penalty per wrongly marked area';

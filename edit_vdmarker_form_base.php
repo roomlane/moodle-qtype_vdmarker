@@ -26,7 +26,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/question/type/vdmarker/edit_vdmarker_form_base.php');
+require_once($CFG->dirroot . '/question/type/vdmarker/venndiagram.php');
 
 /**
  * Venn diagram marking question definition editing form.
@@ -34,40 +34,24 @@ require_once($CFG->dirroot . '/question/type/vdmarker/edit_vdmarker_form_base.ph
  * @copyright  2009 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class qtype_vdmarker_edit_form extends qtype_vdmarker_edit_form_base {
-
-    public function qtype() {
-        return 'vdmarker';
-    }
-    
-    /**
-     * Adds the combobox to select penalty for each incorrectly selected area.
-     * By default 12.5% (1/8) is selected 
+abstract class qtype_vdmarker_edit_form_base extends question_edit_form {
+   /**
+     * Adds the fields for showing the Venn's diagram where teacher can define the areas of correct answer.
      * 
-     * @param MoodleQuickForm $mform
+     * @param MoodleQuickForm $mform 
      */
-    protected function add_penalty_fields($mform) {
-        $penalties = array(
-            1.000,
-            0.125
-        );
-        $penaltyoptions = array();
-        foreach ($penalties as $penalty) {
-            $penaltyoptions["$penalty"] = (100 * $penalty) . '%';
+    protected function add_vd_fields($mform) {
+        $vd = new qtype_vdmarker_vd3("correct_answer_vd");
+        $vd->readonly = false;
+        if (isset($this->question->options)) {
+            $state = $this->question->options->vd_correctanswer;
+        } else {
+            $state = 0;
         }
-        $fldname = 'vd_penalty';
-        $mform->addElement('select', $fldname,
-                            get_string('penalty_per_wrong_area', 'qtype_vdmarker'), 
-                            $penaltyoptions);
-        $mform->setDefault($fldname, 0.125);
+        $vd->set_state($state);
+        $vd->fieldtoupdate = 'vd_correctanswer';
+        $mform->addElement('hidden', $vd->fieldtoupdate, $vd->get_state(), 'id="' . str_replace(':', '_', $vd->fieldtoupdate) . '"');
+        $mform->addElement('static', 'diagram', get_string('correct_answer', 'qtype_vdmarker'), $vd->render());
+        unset($vd);
     }
-
-    protected function definition_inner($mform) {
-        $this->add_vd_fields($mform);
-        $this->add_penalty_fields($mform);
-        
-        $this->add_combined_feedback_fields(true);
-
-        $this->add_interactive_settings(true, true);
-   }
 }
