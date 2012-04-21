@@ -333,4 +333,30 @@ class qtype_vdmarker_vd3 {
         }
         return null;
     }
+    
+    /**
+     * Calculates value of subformula. No syntax checks.
+     * 
+     * @param string $subformula must have passed the syntax check
+     * @return byte state 
+     */
+    private static function sub_formula_to_state($subformula) {
+        $state = 0;
+        
+        return $state;
+    }
+    
+    /**
+     * Calculates Venn's diagram state from the given formula
+     * 
+     * @param string $formula
+     * @return null if invalid syntax, otherwize byte
+     */
+    public static function formula_to_state($formula) {
+        if (isset(qtype_vdmarker_vd3::formula_syntax_check($formula))) {
+            return null;
+        }
+        
+        return qtype_vdmarker_vd3::sub_formula_to_state($formula);
+    }
  }
