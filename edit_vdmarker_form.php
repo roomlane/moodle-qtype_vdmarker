@@ -47,22 +47,19 @@ class qtype_vdmarker_edit_form extends qtype_vdmarker_edit_form_base {
      * @param MoodleQuickForm $mform
      */
     protected function add_penalty_fields($mform) {
-        $penalties = array(
-            1.000,
-            0.125
-        );
-        $penaltyoptions = array();
-        foreach ($penalties as $penalty) {
-            $penaltyoptions["$penalty"] = (100 * $penalty) . '%';
-        }
         $fldname = 'vd_penalty';
         $mform->addElement('select', $fldname,
                             get_string('penalty_per_wrong_area', 'qtype_vdmarker'), 
-                            $penaltyoptions);
-        $mform->setDefault($fldname, 0.125);
+                            question_bank::fraction_options());
+        $mform->setDefault($fldname, 1.0);
     }
-
+    
     protected function definition_inner($mform) {
+        $mform->insertElementBefore($mform->createElement('static', 'for_copy_paste', 
+                get_string('chars_for_copy_paste_caption', 'qtype_vdmarker'), 
+                html_writer::tag('div', qtype_vdmarker_vd3::ALLOWED_CHARS, array('class' => 'vdmarker-for-copy-paste'))
+                ), 'defaultmark');
+        
         $this->add_vd_fields($mform);
         $this->add_penalty_fields($mform);
         

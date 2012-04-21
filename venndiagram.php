@@ -228,4 +228,36 @@ class qtype_vdmarker_vd3 {
         }
         return $cnt;
     }
+    
+    const CHAR_OPENING_BRACET = '(';
+    const CHAR_EMPTY_SET = '∅';
+    const CHAR_SET_A = 'A';
+    const CHAR_SET_B = 'B';
+    const CHAR_SET_C = 'C';
+    const CHAR_UNIVERSE = 'U';
+    const CHAR_INTERSECTION = '∩';
+    const CHAR_UNIONN = '∪';
+    const CHAR_DIFFERENCE = '\\';
+    const CHAR_SYMMETRIC_DIFFERENCE = 'Δ';
+    const CHAR_COMPLEMENT = "'";
+    const CHAR_SPACE = ' ';
+    const CHAR_CLOSING_BRACKET = ')';
+    const ALLOWED_CHARS = '(∅ABCU∩∪\\Δ\' )';
+    
+    /**
+     *
+     * @param type $formula
+     * @return array(ok, error_message, ) 
+     */
+    public static function formula_syntax_check($formula) {
+        $ok = true;
+        $error_message = '';
+        
+//        for($i = 0; strlen($formula{$i}); $i++)	{
+//            $c = ord($str{$i});
+//
+//        }
+        
+        return array($ok, $error_message);
+    }
  }

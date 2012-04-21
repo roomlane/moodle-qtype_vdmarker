@@ -54,4 +54,14 @@ abstract class qtype_vdmarker_edit_form_base extends question_edit_form {
         $mform->addElement('static', 'diagram', get_string('correct_answer', 'qtype_vdmarker'), $vd->render());
         unset($vd);
     }
+    
+    protected function data_preprocessing($question) {
+        
+        // set the default text for question
+        if ('' == $question->questiontext['text']) {
+            $question->questiontext['text'] = get_string('default_question_text', 'qtype_' . $this->qtype());
+        }
+        return $question;
+    }
+  
 }
