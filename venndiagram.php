@@ -229,7 +229,9 @@ class qtype_vdmarker_vd3 {
         return $cnt;
     }
     
-    const CHAR_OPENING_BRACET = '(';
+    const ALLOWED_CHARS = '(∅ABCU∩∪\\Δ\')';
+
+    const CHAR_OPENING_BRACKET = '(';
     const CHAR_EMPTY_SET = '∅';
     const CHAR_SET_A = 'A';
     const CHAR_SET_B = 'B';
@@ -240,24 +242,95 @@ class qtype_vdmarker_vd3 {
     const CHAR_DIFFERENCE = '\\';
     const CHAR_SYMMETRIC_DIFFERENCE = 'Δ';
     const CHAR_COMPLEMENT = "'";
-    const CHAR_SPACE = ' ';
     const CHAR_CLOSING_BRACKET = ')';
-    const ALLOWED_CHARS = '(∅ABCU∩∪\\Δ\' )';
+
+    /**
+     * Produces array of legal characters after each character in the formula
+     * 
+     * @return array
+     */
+    private static function init_legal_characters_after(){
+        $legalcarsafterliteral = array(
+            qtype_vdmarker_vd3::CHAR_UNIVERSE, 
+            qtype_vdmarker_vd3::CHAR_INTERSECTION, 
+            qtype_vdmarker_vd3::CHAR_UNIONN, 
+            qtype_vdmarker_vd3::CHAR_DIFFERENCE, 
+            qtype_vdmarker_vd3::CHAR_SYMMETRIC_DIFFERENCE,
+            qtype_vdmarker_vd3::CHAR_COMPLEMENT, 
+            qtype_vdmarker_vd3::CHAR_CLOSING_BRACKET,
+            '');
+        $legalcarsafterbinaryoperator = array(
+            qtype_vdmarker_vd3::CHAR_OPENING_BRACKET, 
+            qtype_vdmarker_vd3::CHAR_EMPTY_SET, 
+            qtype_vdmarker_vd3::CHAR_SET_A, 
+            qtype_vdmarker_vd3::CHAR_SET_B, 
+            qtype_vdmarker_vd3::CHAR_SET_C,
+            qtype_vdmarker_vd3::CHAR_UNIVERSE);
+        $legalcarsafterbeginblock = $legalcarsafterbinaryoperator;
+        $legalcarsafterendblock = $legalcarsafterliteral;
+
+        return array(
+            '' => $legalcarsafterbeginblock,
+            qtype_vdmarker_vd3::CHAR_OPENING_BRACKET => $legalcarsafterbeginblock,
+            qtype_vdmarker_vd3::CHAR_EMPTY_SET => $legalcarsafterliteral,
+            qtype_vdmarker_vd3::CHAR_SET_A => $legalcarsafterliteral,
+            qtype_vdmarker_vd3::CHAR_SET_B => $legalcarsafterliteral,
+            qtype_vdmarker_vd3::CHAR_SET_C => $legalcarsafterliteral,
+            qtype_vdmarker_vd3::CHAR_UNIVERSE => $legalcarsafterliteral,
+            qtype_vdmarker_vd3::CHAR_INTERSECTION => $legalcarsafterbinaryoperator,
+            qtype_vdmarker_vd3::CHAR_UNIONN => $legalcarsafterbinaryoperator,
+            qtype_vdmarker_vd3::CHAR_DIFFERENCE => $legalcarsafterbinaryoperator,
+            qtype_vdmarker_vd3::CHAR_SYMMETRIC_DIFFERENCE => $legalcarsafterbinaryoperator,
+            qtype_vdmarker_vd3::CHAR_COMPLEMENT => $legalcarsafterliteral,
+            qtype_vdmarker_vd3::CHAR_CLOSING_BRACKET => $legalcarsafterendblock
+        );
+    }
     
     /**
      *
      * @param type $formula
-     * @return array(ok, error_message, ) 
+     * @return string error message or null 
      */
     public static function formula_syntax_check($formula) {
-        $ok = true;
-        $error_message = '';
+        $legalcarsafter = qtype_vdmarker_vd3::init_legal_characters_after();
         
-//        for($i = 0; strlen($formula{$i}); $i++)	{
-//            $c = ord($str{$i});
-//
-//        }
-        
-        return array($ok, $error_message);
+        //TODO: use get_string in error messages
+        if ('' == trim($formula)) {
+            return 'Empty formula';
+        } else {
+            $lastchar = '';
+            $backetbalance = 0;
+            for($i = 0; $i < mb_strlen($formula, 'UTF-8'); $i++) {
+                $char = mb_substr($formula, $i, 1, 'UTF-8');
+                if (($char !== '')&&(mb_strpos(qtype_vdmarker_vd3::ALLOWED_CHARS, $char, 0, 'UTF-8') === false)) {
+                    return 'Unexcpected character in formula: ' . $char;
+                }
+                if (qtype_vdmarker_vd3::CHAR_OPENING_BRACKET == $char) {
+                    $backetbalance++;
+                } else if (qtype_vdmarker_vd3::CHAR_CLOSING_BRACKET == $char) {
+                    $backetbalance--;
+                }
+                $allowednext = $legalcarsafter[$lastchar];
+                if (!in_array($char, $allowednext, true)) {
+                    return 'Unexpected character "' . $char . '" after "' . mb_substr($formula, 0, $i, 'UTF-8') . 
+                            '. Excpected: ' . implode(', ', $allowednext);
+                }
+            
+                if ($backetbalance < 0) {
+                    return 'Invalid placement of brackets';
+                }
+                $lastchar = $char;
+            }
+
+            $allowednext = $legalcarsafter[$lastchar];
+            if (!in_array('', $allowednext, true)) {
+                return 'Unexpected end of formula "' . $formula . '". Expected: ' . implode(', ', $allowednext);
+            }
+            
+            if (0 != $backetbalance) {
+                return 'Bracket count mismatch';
+            }
+        }
+        return null;
     }
  }
