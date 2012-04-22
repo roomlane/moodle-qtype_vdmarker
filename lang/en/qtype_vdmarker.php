@@ -35,6 +35,6 @@ $string['vdmarker_help'] = 'Teacher can define the question (a set theory formul
 
 // other
 $string['penalty_per_wrong_area'] = 'Penalty per wrongly marked area';
-$string['default_question_text'] = 'Mark the areas on Venn\'s diagram when the formula is ' . qtype_vdmarker_vd3::ALLOWED_CHARS; // this text will appear initially in the question text field for teacher
+$string['default_question_text'] = 'Mark the areas on Venn\'s diagram when the formula is ' . qtype_vdmarker_vd3_formula::ALLOWED_CHARS; // this text will appear initially in the question text field for teacher
 $string['chars_for_copy_paste_caption'] = 'Valid characters';
 $string['correct_answer'] = 'Correct answer'; // text that appears left from the diagram on the question editing form
