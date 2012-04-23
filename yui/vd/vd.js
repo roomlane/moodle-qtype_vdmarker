@@ -8,6 +8,7 @@ YUI.add('moodle-qtype_vdmarker-vd', function(Y) {
         state: null,
         Y_fieldtoupdate: null,
         circles: null,
+        bounds: null,
         areas: null,
         initializer: function(config) { //'config' contains the parameter values
             var topnode = this.get('topnode');
@@ -15,6 +16,7 @@ YUI.add('moodle-qtype_vdmarker-vd', function(Y) {
             this.state = this.get('state');
             this.Y_fieldtoupdate = Y.one('#' + this.get('fieldtoupdate').replace(':', '_'));
             this.circles = this.get('circles');
+            this.bounds = this.get('bounds');
             this.areas = Math.pow(2, this.circles.cnt);
             
             this.draw();
@@ -50,6 +52,7 @@ YUI.add('moodle-qtype_vdmarker-vd', function(Y) {
             var pos_x = e.pageX - div_pos[0];
             var pos_y = e.pageY - div_pos[1];
             
+            if ((pos_x >= 0) && (pos_y >= 0) && (pos_x <= this.bounds[0]) && (pos_y  <= this.bounds[1]))
             this.toggle_state_by_offset(pos_x, pos_y);
             
             this.draw();
@@ -104,7 +107,10 @@ YUI.add('moodle-qtype_vdmarker-vd', function(Y) {
                 value: null
             },
             circles: {
-                value : null
+                value: null
+            },
+            bounds: {
+                value: null
             }
         } // Attributs are the parameters sent when the $PAGE->requires->yui_module calls the module. 
     // Here you can declare default values or run functions on the parameter. 

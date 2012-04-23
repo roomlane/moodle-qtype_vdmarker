@@ -89,7 +89,7 @@ class qtype_vdmarker_vd3 {
      *  
      * @var byte
      */
-    protected $state = 3; //255;
+    protected $state = 0;
 
     public function __construct($ID = '') {
         $this->ID = $ID;
@@ -97,8 +97,6 @@ class qtype_vdmarker_vd3 {
 
     public function render() {
         global $CFG;
-
-        //TODO: use html_writer::tag maybe?
 
         $html = '';
         $imagepath = $CFG->httpswwwroot . '/question/type/vdmarker/pix/';
@@ -113,7 +111,10 @@ class qtype_vdmarker_vd3 {
                 }
             }
 
-            $html .= html_writer::tag('div', html_writer::empty_tag('img', array('src' => $imagepath . '3c.png')) . $overlays, array('class' => 'vd-holder-ro'));
+            $html .= html_writer::tag('div', 
+                                      html_writer::empty_tag('img', array('src' => $imagepath . '3c.png')) . $overlays, 
+                                      array('class' => 'vd-holder-ro')
+                                     );
         } else {
             // initially all the overlay layers are visible - this way browser downloads all the images right away
             
@@ -126,11 +127,12 @@ class qtype_vdmarker_vd3 {
             $overlays .= html_writer::empty_tag('img', array('src' => $CFG->httpswwwroot . '/pix/i/loading.gif',
                         'class' => 'vd-overlay',
                         'id' => "loading"));
-            //TODO: add a "loading" image until js is attached and hides it. Afeter F5 in browser it can take some time to set up
 
-            $html .= html_writer::tag('div', html_writer::empty_tag('img', array('src' => $imagepath . '3c.png')) . $overlays, array('class' => 'vd-holder',
-                        'id' => $this->ID)
-            );
+            $html .= html_writer::tag('div', 
+                                      html_writer::empty_tag('img', array('src' => $imagepath . '3c.png')) . $overlays, 
+                                      array('class' => 'vd-holder',
+                                            'id' => $this->ID)
+                                     );
 
             $this->attach_js();
         }
@@ -150,9 +152,10 @@ class qtype_vdmarker_vd3 {
                          );
 
         $params = array('topnode' => $this->ID,
-            'state' => $this->state,
-            'fieldtoupdate' => $this->fieldtoupdate,
-            'circles' => $circles);
+                        'state' => $this->state,
+                        'fieldtoupdate' => $this->fieldtoupdate,
+                        'circles' => $circles,
+                        'bounds' => array(220, 211));
 
         $PAGE->requires->yui_module('moodle-qtype_vdmarker-vd', 'M.qtype_vdmarker.init_vd', array($params));
     }

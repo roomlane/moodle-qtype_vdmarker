@@ -172,8 +172,17 @@ class qtype_vdmarker_vd3_formula {
         );
     }
     
+    /**
+     * Helper function for sub_formula_to_state
+     * 
+     * @param string $subformula
+     * @param int $startpos
+     * @param int $level
+     * @return array ($operatorpos, $removebrackets, $level) 
+     */
     private function find_higher_level_operator_left($subformula, $startpos, $level) {
         $removebrackets = false;
+        $bracketbalance = 0;
         for($i = $startpos; $i >= 0; $i--) {
             $char = mb_substr($subformula, $i, 1, 'UTF-8');
             if ($bracketbalance !== 0) {
@@ -185,7 +194,7 @@ class qtype_vdmarker_vd3_formula {
             } else if ($char === self::CHAR_CLOSING_BRACKET) {
                 $bracketbalance++;
                 if ($i == $startpos) {
-                    $removebrackets = true; //TODO: set to false when ned to include an operator
+                    $removebrackets = true;
                 }
             } else if (array_key_exists($char, $this->operators)) {
                 $templevel = $this->operators[$char];
@@ -206,26 +215,27 @@ class qtype_vdmarker_vd3_formula {
      * @return byte state 
      */
     private function sub_formula_to_state($subformula) {
-        if (in_array($subformula, $this->literals, true)) {
+        if (array_key_exists($subformula, $this->literals)) {
             return $this->literals[$subformula];
         } else {
             //! find rightmost parameter, operand and left parameter
             
-            $length = mb_strlen($subformula, 'UTF-8') - 1;
-            $startpos = $length;
+            $length = mb_strlen($subformula, 'UTF-8');
+            $startpos = $length - 1;
             $operatorlevel = 0;
             
-            $rightparameter = null;
             $leftpatameter = null;
+            $rightparameter = null;
             $operator = null;
             
             $removebrackets = false;
             $operatorpos = 0;
             
-            $removebracketsrightparam = true;
+            $first = true;
+            $removebracketsrightparam = false;
             
             while (!isset($leftpatameter)) {
-                list($operatorpos, $removebrackets, $operatorlevel) = find_higher_level_operator_left($subformula, $startpos, $operatorlevel);
+                list($operatorpos, $removebrackets, $operatorlevel) = $this->find_higher_level_operator_left($subformula, $startpos, $operatorlevel);
                 if ($operatorpos == -1) {
                     if ($removebrackets === true) {
                         $leftpatameter = mb_substr($subformula, 1, $startpos - 1, 'UTF-8');
@@ -242,7 +252,8 @@ class qtype_vdmarker_vd3_formula {
                     }
                 } else {
                     $startpos = $operatorpos - 1;
-                    $removebracketsrightparam = $removebracketsrightparam && $removebrackets;
+                    $removebracketsrightparam = $first && $removebrackets;
+                    $first = false;
                 }
             }
             
@@ -254,19 +265,19 @@ class qtype_vdmarker_vd3_formula {
                 return 255 ^ $leftvalue;
             } else if (self::CHAR_INTERSECTION === $operator) {
                 $leftvalue = $this->sub_formula_to_state($leftpatameter);
-                $righvalue = $this->sub_formula_to_state($rightpatameter);
+                $righvalue = $this->sub_formula_to_state($rightparameter);
                 return $leftvalue & $righvalue;
             } else if (self::CHAR_UNIONN === $operator) {
                 $leftvalue = $this->sub_formula_to_state($leftpatameter);
-                $righvalue = $this->sub_formula_to_state($rightpatameter);
+                $righvalue = $this->sub_formula_to_state($rightparameter);
                 return $leftvalue | $righvalue;
             } else if (self::CHAR_DIFFERENCE === $operator) {
                 $leftvalue = $this->sub_formula_to_state($leftpatameter);
-                $righvalue = $this->sub_formula_to_state($rightpatameter);
+                $righvalue = $this->sub_formula_to_state($rightparameter);
                 return $leftvalue ^ ($leftvalue & $righvalue);
             } else if (self::CHAR_SYMMETRIC_DIFFERENCE === $operator) {
                 $leftvalue = $this->sub_formula_to_state($leftpatameter);
-                $righvalue = $this->sub_formula_to_state($rightpatameter);
+                $righvalue = $this->sub_formula_to_state($rightparameter);
                 return ($leftvalue | $righvalue) ^ ($leftvalue & $righvalue);
             }
         }
@@ -284,8 +295,8 @@ class qtype_vdmarker_vd3_formula {
             return null;
         }
         
-        //TODO init operators etc
-        
+        $this->init_operators();
+        $this->init_literals();
         return $this->sub_formula_to_state($formula);
     }
  }
