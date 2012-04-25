@@ -57,13 +57,13 @@ class qtype_vdmarker_vd3_formula {
      */
     private $maxlen;
     
-    private $allowedchars = ALLOWED_CHARS;
+    private $allowedchars = self::ALLOWED_CHARS;
     
     /**
      * @param int $maxlen max. allowed formula length
      * @param string $allowedchars allowed characters (characters not in ALLOWED_CHARS are ignored)
      */
-    public function __construct($maxlen = 0, $allowedchars = self::ALLOWED_CHARS) {
+    public function __construct($maxlen = 0, $allowedchars = '') {
         $this->maxlen = $maxlen;
         $this->set_allowed_chars($allowedchars);
     }
@@ -86,6 +86,8 @@ class qtype_vdmarker_vd3_formula {
             }
             if ($chars <> '') {
                 $this->allowedchars = $chars;
+            } else {
+                $this->allowedchars = self::ALLOWED_CHARS;
             }
         }
     }
