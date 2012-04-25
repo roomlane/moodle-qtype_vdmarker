@@ -42,7 +42,53 @@ class qtype_vdmarker_vd3_formula {
     const CHAR_COMPLEMENT = "'";
     const CHAR_CLOSING_BRACKET = ')';
     
+    /**
+     * All the possible characters that can appear after a character in the formula
+     * 
+     * @var array char => array(char1, char2, ..) 
+     */
     private $legalcarsafter;
+    
+    /**
+     * Max allowed formula length
+     * if less than 1 then no limit set
+     * 
+     * @var int 
+     */
+    private $maxlen;
+    
+    private $allowedchars = ALLOWED_CHARS;
+    
+    /**
+     * @param int $maxlen max. allowed formula length
+     * @param string $allowedchars allowed characters (characters not in ALLOWED_CHARS are ignored)
+     */
+    public function __construct($maxlen = 0, $allowedchars = self::ALLOWED_CHARS) {
+        $this->maxlen = $maxlen;
+        $this->set_allowed_chars($allowedchars);
+    }
+    
+    /**
+     * Set the characters that are allowed in formula
+     * Ignores characters that are not in ALLOWED_CHARS
+     * 
+     * @param string $allowedchars subset of ALLOWED_CHARS
+     */
+    public function set_allowed_chars($allowedchars) {
+        if ($allowedchars !== $this->allowedchars) {
+            $chars = '';
+            $len = mb_strlen($allowedchars, 'UTF-8');
+            for ($i = 0; $i < $len; $i++) {
+                $char = mb_substr($allowedchars, $i, 1, 'UTF-8');
+                if (mb_strpos(self::ALLOWED_CHARS, $char, 0, 'UTF-8')) {
+                    $chars .= $char;
+                }
+            }
+            if ($chars <> '') {
+                $this->allowedchars = $chars;
+            }
+        }
+    }
 
     /**
      * Produces array of legal characters after each character in the formula
@@ -101,9 +147,13 @@ class qtype_vdmarker_vd3_formula {
         if ('' == trim($formula)) {
             return 'Empty formula';
         } else {
+            $len = mb_strlen($formula, 'UTF-8');
+            if (($this->maxlen >= 1) && ((int)$len > (int)$this->maxlen)) {
+                return 'Formula exceeds max. allowed length';
+            }
             $lastchar = '';
             $backetbalance = 0;
-            for($i = 0; $i < mb_strlen($formula, 'UTF-8'); $i++) {
+            for($i = 0; $i < $len; $i++) {
                 $char = mb_substr($formula, $i, 1, 'UTF-8');
                 if (($char !== '')&&(mb_strpos(self::ALLOWED_CHARS, $char, 0, 'UTF-8') === false)) {
                     return 'Unexcpected character in formula: ' . $char;
