@@ -64,7 +64,7 @@ class qtype_vdmarker_vd3_formula {
      * @param string $allowedchars allowed characters (characters not in ALLOWED_CHARS are ignored)
      */
     public function __construct($maxlen = 0, $allowedchars = '') {
-        $this->maxlen = $maxlen;
+        $this->set_max_len($maxlen);
         $this->set_allowed_chars($allowedchars);
     }
     
@@ -90,6 +90,21 @@ class qtype_vdmarker_vd3_formula {
                 $this->allowedchars = self::ALLOWED_CHARS;
             }
         }
+    }
+    
+    public function get_allowed_chars() {
+        return $this->allowedchars;
+    }
+    
+    public function set_max_len($maxlen) {
+        $this->maxlen = $maxlen;
+        if ($this->maxlen < 1) {
+            $this->maxlen = null;
+        }
+    }
+    
+    public function get_max_len() {
+        return $this->maxlen;
     }
 
     /**
@@ -158,7 +173,8 @@ class qtype_vdmarker_vd3_formula {
             for($i = 0; $i < $len; $i++) {
                 $char = mb_substr($formula, $i, 1, 'UTF-8');
                 if (($char !== '')&&(mb_strpos(self::ALLOWED_CHARS, $char, 0, 'UTF-8') === false)) {
-                    return 'Unexcpected character in formula: ' . $char;
+                    return 'Unexcpected character "' . $char . '" after "' . mb_substr($formula, 0, $i, 'UTF-8') . 
+                            '". Excpected: ' . implode(', ', $allowednext);
                 }
                 if (self::CHAR_OPENING_BRACKET == $char) {
                     $backetbalance++;
@@ -168,7 +184,7 @@ class qtype_vdmarker_vd3_formula {
                 $allowednext = $this->legalcarsafter[$lastchar];
                 if (!in_array($char, $allowednext, true)) {
                     return 'Unexpected character "' . $char . '" after "' . mb_substr($formula, 0, $i, 'UTF-8') . 
-                            '. Excpected: ' . implode(', ', $allowednext);
+                            '". Excpected: ' . implode(', ', $allowednext);
                 }
             
                 if ($backetbalance < 0) {

@@ -56,12 +56,18 @@ abstract class qtype_vdmarker_edit_form_base extends question_edit_form {
     }
     
     protected function data_preprocessing($question) {
-        
+        $question = parent::data_preprocessing($question);
+                
         // set the default text for question
         if ('' == $question->questiontext['text']) {
             $question->questiontext['text'] = get_string('default_question_text', 'qtype_' . $this->qtype());
         }
         return $question;
     }
-  
+ 
+    protected function definition_inner($mform) {
+        parent::definition_inner($mform);
+        
+        $mform->addRule('questiontext', null, 'required', null, 'client');
+    }
 }
