@@ -18,7 +18,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Formula for Venn diagram of 3 circles.
+ * Expression for Venn diagram of 3 circles.
  * 
  * @package    rs_questiontypes
  * @subpackage vdmarker
@@ -26,7 +26,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  &copy; 2012 Rommi Saar
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class qtype_vdmarker_vd3_formula {
+class qtype_vdmarker_vd3_expression {
     const ALLOWED_CHARS = '(∅ABCU∩∪\\Δ\')';
 
     const CHAR_OPENING_BRACKET = '(';
@@ -43,14 +43,14 @@ class qtype_vdmarker_vd3_formula {
     const CHAR_CLOSING_BRACKET = ')';
     
     /**
-     * All the possible characters that can appear after a character in the formula
+     * All the possible characters that can appear after a character in the expression
      * 
      * @var array char => array(char1, char2, ..) 
      */
     private $legalcarsafter;
     
     /**
-     * Max allowed formula length
+     * Max allowed expression length
      * if less than 1 then no limit set
      * 
      * @var int 
@@ -60,7 +60,7 @@ class qtype_vdmarker_vd3_formula {
     private $allowedchars = self::ALLOWED_CHARS;
     
     /**
-     * @param int $maxlen max. allowed formula length
+     * @param int $maxlen max. allowed expression length
      * @param string $allowedchars allowed characters (characters not in ALLOWED_CHARS are ignored)
      */
     public function __construct($maxlen = 0, $allowedchars = '') {
@@ -69,7 +69,7 @@ class qtype_vdmarker_vd3_formula {
     }
     
     /**
-     * Set the characters that are allowed in formula
+     * Set the characters that are allowed in expression
      * Ignores characters that are not in ALLOWED_CHARS
      * 
      * @param string $allowedchars subset of ALLOWED_CHARS
@@ -109,7 +109,7 @@ class qtype_vdmarker_vd3_formula {
     }
 
     /**
-     * Produces array of legal characters after each character in the formula
+     * Produces array of legal characters after each character in the expression
      */
     private function init_legal_characters_after(){
         if (isset($this->legalcarsafter)) {
@@ -164,29 +164,29 @@ class qtype_vdmarker_vd3_formula {
     }
     
     /**
-     * Checks if the formula in syntactically correct
+     * Checks if the expression in syntactically correct
      * 
-     * @param type $formula
+     * @param string $expression
      * @return string error message or null 
      */
-    public function syntax_check($formula) {
+    public function syntax_check($expression) {
         $this->init_legal_characters_after();
         
         //TODO: use get_string in error messages
-        if ('' == trim($formula)) {
-            return 'Empty formula';
+        if ('' == trim($expression)) {
+            return 'Empty expression';
         } else {
-            $len = mb_strlen($formula, 'UTF-8');
+            $len = mb_strlen($expression, 'UTF-8');
             if (($this->maxlen >= 1) && ((int)$len > (int)$this->maxlen)) {
-                return 'Formula exceeds max. allowed length';
+                return 'Expression exceeds max. allowed length';
             }
             $lastchar = '';
             $backetbalance = 0;
             for($i = 0; $i < $len; $i++) {
-                $char = mb_substr($formula, $i, 1, 'UTF-8');
+                $char = mb_substr($expression, $i, 1, 'UTF-8');
                 $allowednext = $this->legalcarsafter[$lastchar];
                 if (($char !== '')&&(mb_strpos($this->allowedchars, $char, 0, 'UTF-8') === false)) {
-                    return 'Unexcpected character "' . $char . '" after "' . mb_substr($formula, 0, $i, 'UTF-8') . 
+                    return 'Unexcpected character "' . $char . '" after "' . mb_substr($expression, 0, $i, 'UTF-8') . 
                             '". Excpected: ' . implode(', ', $allowednext);
                 }
                 if (self::CHAR_OPENING_BRACKET == $char) {
@@ -195,7 +195,7 @@ class qtype_vdmarker_vd3_formula {
                     $backetbalance--;
                 }
                 if (!in_array($char, $allowednext, true)) {
-                    return 'Unexpected character "' . $char . '" after "' . mb_substr($formula, 0, $i, 'UTF-8') . 
+                    return 'Unexpected character "' . $char . '" after "' . mb_substr($expression, 0, $i, 'UTF-8') . 
                             '". Excpected: ' . implode(', ', $allowednext);
                 }
             
@@ -207,7 +207,7 @@ class qtype_vdmarker_vd3_formula {
 
             $allowednext = $this->legalcarsafter[$lastchar];
             if (!in_array('', $allowednext, true)) {
-                return 'Unexpected end of formula "' . $formula . '". Expected: ' . implode(', ', $allowednext);
+                return 'Unexpected end of expression "' . $expression . '". Expected: ' . implode(', ', $allowednext);
             }
             
             if (0 != $backetbalance) {
@@ -253,18 +253,18 @@ class qtype_vdmarker_vd3_formula {
     }
     
     /**
-     * Helper function for sub_formula_to_state
+     * Helper function for sub_expression_to_state
      * 
-     * @param string $subformula
+     * @param string $subexpression
      * @param int $startpos
      * @param int $level
      * @return array ($operatorpos, $removebrackets, $level) 
      */
-    private function find_higher_level_operator_left($subformula, $startpos, $level) {
+    private function find_higher_level_operator_left($subexpression, $startpos, $level) {
         $removebrackets = false;
         $bracketbalance = 0;
         for($i = $startpos; $i >= 0; $i--) {
-            $char = mb_substr($subformula, $i, 1, 'UTF-8');
+            $char = mb_substr($subexpression, $i, 1, 'UTF-8');
             if ($bracketbalance !== 0) {
                 if ($char === self::CHAR_CLOSING_BRACKET) {
                     $bracketbalance++;
@@ -289,18 +289,18 @@ class qtype_vdmarker_vd3_formula {
    }
     
     /**
-     * Calculates value of subformula. No syntax checks.
+     * Calculates value of subexpression. No syntax checks.
      * 
-     * @param string $subformula must have passed the syntax check
+     * @param string $subexpression must have passed the syntax check
      * @return byte state 
      */
-    private function sub_formula_to_state($subformula) {
-        if (array_key_exists($subformula, $this->literals)) {
-            return $this->literals[$subformula];
+    private function sub_expression_to_state($subexpression) {
+        if (array_key_exists($subexpression, $this->literals)) {
+            return $this->literals[$subexpression];
         } else {
             //! find rightmost parameter, operand and left parameter
             
-            $length = mb_strlen($subformula, 'UTF-8');
+            $length = mb_strlen($subexpression, 'UTF-8');
             $startpos = $length - 1;
             $operatorlevel = 0;
             
@@ -315,20 +315,20 @@ class qtype_vdmarker_vd3_formula {
             $removebracketsrightparam = false;
             
             while (!isset($leftpatameter)) {
-                list($operatorpos, $removebrackets, $operatorlevel) = $this->find_higher_level_operator_left($subformula, $startpos, $operatorlevel);
+                list($operatorpos, $removebrackets, $operatorlevel) = $this->find_higher_level_operator_left($subexpression, $startpos, $operatorlevel);
                 if ($operatorpos == -1) {
                     if ($removebrackets === true) {
-                        $leftpatameter = mb_substr($subformula, 1, $startpos - 1, 'UTF-8');
+                        $leftpatameter = mb_substr($subexpression, 1, $startpos - 1, 'UTF-8');
                     } else {
-                        $leftpatameter = mb_substr($subformula, 0, $startpos + 1, 'UTF-8');
+                        $leftpatameter = mb_substr($subexpression, 0, $startpos + 1, 'UTF-8');
                     }
                     
-                    $operator = mb_substr($subformula, $startpos + 1, 1, 'UTF-8');
+                    $operator = mb_substr($subexpression, $startpos + 1, 1, 'UTF-8');
 
                     if ($removebracketsrightparam === true) {
-                        $rightparameter = mb_substr($subformula, $startpos + 3, $length - $startpos - 4, 'UTF-8');
+                        $rightparameter = mb_substr($subexpression, $startpos + 3, $length - $startpos - 4, 'UTF-8');
                     } else {
-                        $rightparameter = mb_substr($subformula, $startpos + 2, $length - $startpos - 2, 'UTF-8');
+                        $rightparameter = mb_substr($subexpression, $startpos + 2, $length - $startpos - 2, 'UTF-8');
                     }
                 } else {
                     $startpos = $operatorpos - 1;
@@ -339,44 +339,44 @@ class qtype_vdmarker_vd3_formula {
             
             if (!isset($operator) || ($operator == '')) {
                 // only brackets removed
-                return $this->sub_formula_to_state($leftpatameter);
+                return $this->sub_expression_to_state($leftpatameter);
             } else if (self::CHAR_COMPLEMENT === $operator) {
-                $leftvalue = $this->sub_formula_to_state($leftpatameter);
+                $leftvalue = $this->sub_expression_to_state($leftpatameter);
                 return 255 ^ $leftvalue;
             } else if (self::CHAR_INTERSECTION === $operator) {
-                $leftvalue = $this->sub_formula_to_state($leftpatameter);
-                $righvalue = $this->sub_formula_to_state($rightparameter);
+                $leftvalue = $this->sub_expression_to_state($leftpatameter);
+                $righvalue = $this->sub_expression_to_state($rightparameter);
                 return $leftvalue & $righvalue;
             } else if (self::CHAR_UNIONN === $operator) {
-                $leftvalue = $this->sub_formula_to_state($leftpatameter);
-                $righvalue = $this->sub_formula_to_state($rightparameter);
+                $leftvalue = $this->sub_expression_to_state($leftpatameter);
+                $righvalue = $this->sub_expression_to_state($rightparameter);
                 return $leftvalue | $righvalue;
             } else if (self::CHAR_DIFFERENCE === $operator) {
-                $leftvalue = $this->sub_formula_to_state($leftpatameter);
-                $righvalue = $this->sub_formula_to_state($rightparameter);
+                $leftvalue = $this->sub_expression_to_state($leftpatameter);
+                $righvalue = $this->sub_expression_to_state($rightparameter);
                 return $leftvalue ^ ($leftvalue & $righvalue);
             } else if (self::CHAR_SYMMETRIC_DIFFERENCE === $operator) {
-                $leftvalue = $this->sub_formula_to_state($leftpatameter);
-                $righvalue = $this->sub_formula_to_state($rightparameter);
+                $leftvalue = $this->sub_expression_to_state($leftpatameter);
+                $righvalue = $this->sub_expression_to_state($rightparameter);
                 return ($leftvalue | $righvalue) ^ ($leftvalue & $righvalue);
             }
         }
     }
     
     /**
-     * Calculates Venn diagram state from the given formula
+     * Calculates Venn diagram state from the given expression
      * 
-     * @param string $formula
+     * @param string $expression
      * @return null if invalid syntax, otherwize byte
      */
-    public function formula_to_state($formula) {
-        $error = $this->syntax_check($formula);
+    public function expression_to_state($expression) {
+        $error = $this->syntax_check($expression);
         if (isset($error)) {
             return null;
         }
         
         $this->init_operators();
         $this->init_literals();
-        return $this->sub_formula_to_state($formula);
+        return $this->sub_expression_to_state($expression);
     }
  }

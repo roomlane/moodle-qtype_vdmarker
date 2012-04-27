@@ -1,6 +1,6 @@
 Venn diagram markers question type
 
-Teacher can define the question (a set theory formula), correct answer as a Venn diagram and penalty per incorrectly answered region. 
+Teacher can define the question (a set theory expression), correct answer as a Venn diagram and penalty per incorrectly answered region. 
 Student can click on Venn diagram to mark regions selected or unselected.
 
 This question type was written by Rommi Saar.

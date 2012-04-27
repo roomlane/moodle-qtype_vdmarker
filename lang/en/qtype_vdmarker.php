@@ -31,10 +31,10 @@ $string['addingvdmarker'] = 'Adding Venn diagram marker.';
 $string['editingvdmarker'] = 'Editing Venn diagram marker.';
 $string['vdmarker'] = 'Venn diagram marker';
 $string['vdmarkersummary'] = 'Mark areas of the Venn diagram.';
-$string['vdmarker_help'] = 'Teacher can define the question (a set theory formula) and marks for every reagion on Venn diagram. Student can click on Venn diagram to mark regions selected or unselected.';
+$string['vdmarker_help'] = 'Teacher can define the question (a set theory expression) and marks for every reagion on Venn diagram. Student can click on Venn diagram to mark regions selected or unselected.';
 
 // other
 $string['penalty_per_wrong_area'] = 'Penalty per wrongly marked area';
-$string['default_question_text'] = 'Mark the areas on Venn\'s diagram when the formula is ' . qtype_vdmarker_vd3_formula::ALLOWED_CHARS; // this text will appear initially in the question text field for teacher
+$string['default_question_text'] = 'Mark the areas on Venn\'s diagram when the expression is ' . qtype_vdmarker_vd3_expression::ALLOWED_CHARS; // this text will appear initially in the question text field for teacher
 $string['chars_for_copy_paste_caption'] = 'Valid characters';
 $string['correct_answer'] = 'Correct answer'; // text that appears left from the diagram on the question editing form

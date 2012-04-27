@@ -17,7 +17,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/question/type/vdmarker/formula.php');
+require_once($CFG->dirroot . '/question/type/vdmarker/expression.php');
 
 /**
  * Venn diagram of 3 circles.
