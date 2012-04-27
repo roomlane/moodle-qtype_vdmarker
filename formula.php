@@ -80,7 +80,7 @@ class qtype_vdmarker_vd3_formula {
             $len = mb_strlen($allowedchars, 'UTF-8');
             for ($i = 0; $i < $len; $i++) {
                 $char = mb_substr($allowedchars, $i, 1, 'UTF-8');
-                if (mb_strpos(self::ALLOWED_CHARS, $char, 0, 'UTF-8')) {
+                if (mb_strpos(self::ALLOWED_CHARS, $char, 0, 'UTF-8') !== false) {
                     $chars .= $char;
                 }
             }
@@ -89,6 +89,7 @@ class qtype_vdmarker_vd3_formula {
             } else {
                 $this->allowedchars = self::ALLOWED_CHARS;
             }
+            $this->legalcarsafter = null;
         }
     }
     
@@ -115,7 +116,7 @@ class qtype_vdmarker_vd3_formula {
             return;
         }
         
-        $legalcarsafterliteral = array(
+        $legalcarsafterliteral_initial = array(
             self::CHAR_UNIVERSE, 
             self::CHAR_INTERSECTION, 
             self::CHAR_UNIONN, 
@@ -124,13 +125,24 @@ class qtype_vdmarker_vd3_formula {
             self::CHAR_COMPLEMENT, 
             self::CHAR_CLOSING_BRACKET,
             '');
-        $legalcarsafterbinaryoperator = array(
+        foreach($legalcarsafterliteral_initial as $char) {
+            if( ('' == $char) || (mb_strpos($this->allowedchars, $char, 0, 'UTF-8') !== false) ) {
+                $legalcarsafterliteral[] = $char;
+            }
+        }
+        $legalcarsafterbinaryoperator_initial = array(
             self::CHAR_OPENING_BRACKET, 
             self::CHAR_EMPTY_SET, 
             self::CHAR_SET_A, 
             self::CHAR_SET_B, 
             self::CHAR_SET_C,
             self::CHAR_UNIVERSE);
+        foreach($legalcarsafterbinaryoperator_initial as $char) {
+            if( ('' == $char) || (mb_strpos($this->allowedchars, $char, 0, 'UTF-8') !== false) ) {
+                $legalcarsafterbinaryoperator[] = $char;
+            }
+        }
+
         $legalcarsafterbeginblock = $legalcarsafterbinaryoperator;
         $legalcarsafterendblock = $legalcarsafterliteral;
 
@@ -172,7 +184,8 @@ class qtype_vdmarker_vd3_formula {
             $backetbalance = 0;
             for($i = 0; $i < $len; $i++) {
                 $char = mb_substr($formula, $i, 1, 'UTF-8');
-                if (($char !== '')&&(mb_strpos(self::ALLOWED_CHARS, $char, 0, 'UTF-8') === false)) {
+                $allowednext = $this->legalcarsafter[$lastchar];
+                if (($char !== '')&&(mb_strpos($this->allowedchars, $char, 0, 'UTF-8') === false)) {
                     return 'Unexcpected character "' . $char . '" after "' . mb_substr($formula, 0, $i, 'UTF-8') . 
                             '". Excpected: ' . implode(', ', $allowednext);
                 }
@@ -181,7 +194,6 @@ class qtype_vdmarker_vd3_formula {
                 } else if (self::CHAR_CLOSING_BRACKET == $char) {
                     $backetbalance--;
                 }
-                $allowednext = $this->legalcarsafter[$lastchar];
                 if (!in_array($char, $allowednext, true)) {
                     return 'Unexpected character "' . $char . '" after "' . mb_substr($formula, 0, $i, 'UTF-8') . 
                             '". Excpected: ' . implode(', ', $allowednext);
