@@ -20,7 +20,7 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot . '/question/type/vdmarker/formula.php');
 
 /**
- * Venn's diagram of 3 circles.
+ * Venn diagram of 3 circles.
  * U - umivese
  * A, B, C - partially overlaping circles
  * 
@@ -179,7 +179,7 @@ class qtype_vdmarker_vd3 {
     }
 
     /**
-     * Converts packed (byte) set to an array of bool where each element is an area on Venn's diagram
+     * Converts packed (byte) set to an array of bool where each element is an area on Venn diagram
      * 
      * @param byte $state {@see $state}
      * @return array of bool {@see $areastate}

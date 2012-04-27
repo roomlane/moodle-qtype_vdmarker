@@ -364,7 +364,7 @@ class qtype_vdmarker_vd3_formula {
     }
     
     /**
-     * Calculates Venn's diagram state from the given formula
+     * Calculates Venn diagram state from the given formula
      * 
      * @param string $formula
      * @return null if invalid syntax, otherwize byte
