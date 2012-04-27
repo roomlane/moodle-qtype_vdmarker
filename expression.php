@@ -205,6 +205,12 @@ class qtype_vdmarker_vd3_expression {
             $backetbalance = 0;
             for($i = 0; $i < $len; $i++) {
                 $char = mb_substr($expression, $i, 1, 'UTF-8');
+                
+                // ignore spaces
+                if ($char === ' ') {
+                    continue;
+                }
+                
                 $allowednext = $this->legalcarsafter[$lastchar];
                 if (($char !== '')&&(mb_strpos($this->allowedchars, $char, 0, 'UTF-8') === false)) {
                     return 'Unexcpected character "' . $char . '" after "' . mb_substr($expression, 0, $i, 'UTF-8') . 
@@ -286,6 +292,12 @@ class qtype_vdmarker_vd3_expression {
         $bracketbalance = 0;
         for($i = $startpos; $i >= 0; $i--) {
             $char = mb_substr($subexpression, $i, 1, 'UTF-8');
+
+            // ignore spaces
+            if ($char === ' ') {
+                continue;
+            }
+            
             if ($bracketbalance !== 0) {
                 if ($char === self::CHAR_CLOSING_BRACKET) {
                     $bracketbalance++;
@@ -316,6 +328,7 @@ class qtype_vdmarker_vd3_expression {
      * @return byte state 
      */
     private function sub_expression_to_state($subexpression) {
+        $subexpression = trim($subexpression, ' ');
         if (array_key_exists($subexpression, $this->literals)) {
             return $this->literals[$subexpression];
         } else {
