@@ -59,7 +59,7 @@ class qtype_vdmarker_edit_form extends qtype_vdmarker_edit_form_base {
         
         $mform->insertElementBefore($mform->createElement('static', 'for_copy_paste', 
                 get_string('chars_for_copy_paste_caption', 'qtype_vdmarker'), 
-                html_writer::tag('div', qtype_vdmarker_vd3_expression::ALLOWED_CHARS, array('class' => 'vdmarker-for-copy-paste'))
+                html_writer::tag('div', qtype_vdmarker_vd3_expression::get_chars_formatted(qtype_vdmarker_vd3_expression::ALLOWED_CHARS), array('class' => 'vdmarker-for-copy-paste'))
                 ), 'defaultmark');
         
         $this->add_vd_fields($mform);

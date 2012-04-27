@@ -24,7 +24,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */ 
 
-require_once($CFG->dirroot . '/question/type/vdmarker/venndiagram.php');
+require_once($CFG->dirroot . '/question/type/vdmarker/expression.php');
 
 // required by qtype standard
 $string['addingvdmarker'] = 'Adding Venn diagram marker.';
@@ -35,6 +35,6 @@ $string['vdmarker_help'] = 'Teacher can define the question (a set theory expres
 
 // other
 $string['penalty_per_wrong_area'] = 'Penalty per wrongly marked area';
-$string['default_question_text'] = 'Mark the areas on Venn\'s diagram when the expression is ' . qtype_vdmarker_vd3_expression::ALLOWED_CHARS; // this text will appear initially in the question text field for teacher
+$string['default_question_text'] = 'Mark the areas on Venn\'s diagram when the expression is ' . qtype_vdmarker_vd3_expression::get_chars_formatted(qtype_vdmarker_vd3_expression::ALLOWED_CHARS); // this text will appear initially in the question text field for teacher
 $string['chars_for_copy_paste_caption'] = 'Valid characters';
 $string['correct_answer'] = 'Correct answer'; // text that appears left from the diagram on the question editing form

@@ -69,6 +69,23 @@ class qtype_vdmarker_vd3_expression {
     }
     
     /**
+     * places space and comma between each character in the string
+     * 
+     * @param string $chars 
+     */
+    public static function get_chars_formatted($chars) {
+        if ($chars === '') {
+            return '';
+        }
+        $chararray = array();
+        $len = mb_strlen($chars, 'UTF-8');
+        for ($i = 0; $i < $len; $i++) {
+            $chararray[] = mb_substr($chars, $i, 1, 'UTF-8');
+        }
+        return implode(', ', $chararray);
+    }
+    
+    /**
      * Set the characters that are allowed in expression
      * Ignores characters that are not in ALLOWED_CHARS
      * 
@@ -95,6 +112,10 @@ class qtype_vdmarker_vd3_expression {
     
     public function get_allowed_chars() {
         return $this->allowedchars;
+    }
+    
+    public function get_allowed_chars_formatted() {
+        return self::get_chars_formatted($this->allowedchars);
     }
     
     public function set_max_len($maxlen) {
