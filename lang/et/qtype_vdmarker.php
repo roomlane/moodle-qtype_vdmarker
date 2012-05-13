@@ -30,7 +30,7 @@ require_once($CFG->dirroot . '/question/type/vdmarker/expression.php');
 $string['addingvdmarker'] = 'Venn\'i diagrammi märkija küsimuse lisamine';
 $string['editingvdmarker'] = 'Venn\'i diagrammi märkija muutmine';
 $string['vdmarker'] = 'Venn\'i diagrammi märkija';
-$string['vdmarkersummary'] = 'Võimaldab anda vastuse märkides Venn\'i diagrammil erinevaid piirkondi vastavalt ettentud ülesande tekstile.';
+$string['vdmarkersummary'] = 'Võimaldab anda vastuse märkides Venn\'i diagrammil erinevaid piirkondi vastavalt etteantud ülesande tekstile.';
 $string['vdmarker_help'] = 'Õppetaja annab ülesande teksti, mis tavaliselt sisaldab hulgateoori avaldist. Õpilane valib hiirega Venn\'i diagrammil klõpsates piirkonnad, mis vastavad ülesande tekstile.';
 
 // other
