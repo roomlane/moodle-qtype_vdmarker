@@ -16,3 +16,5 @@ Then add question/type/vdmarker to your git ignore.
 Alternatively, download the zip from
     https://github.com/roomlane/moodle-qtype_vdmarker/zipball/master
 unzip it into the question/type folder, and then rename the new folder to vdmarker.
+
+Some example questions can be imported from Moodle XML format file "examples/et/küsimused-Hulgateooria-diagrammi märkija-20120515-1055.xml" (these are in Estonian)

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quiz>
+<!-- question: 0  -->
+  <question type="category">
+    <category>
+        <text>$course$/Default for Hulgateooria/näited/diagrammi märkija</text>
+
+    </category>
+  </question>
+
+<!-- question: 24  -->
+  <question type="vdexpression">
+    <name>
+      <text>diagramm avaldiseks AΔBΔC∪A∩C</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>Koostada nähtud Venn'i diagrammi põhjal hulgateooria avaldis. Soovitatav on kopeerida märgid lubatud tähemärkide nimekirjast.</p>]]></text>
+    </questiontext>
+    <generalfeedback format="html">
+      <text></text>
+    </generalfeedback>
+    <defaultgrade>1.0000000</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <vd_correctanswer>182</vd_correctanswer>
+    <vd_expression_maxlen>0</vd_expression_maxlen>
+    <vd_expression_chars>(∅ABCU∩∪\Δ')</vd_expression_chars>
+  </question>
+
+<!-- question: 18  -->
+  <question type="vdexpression">
+    <name>
+      <text>diagramm avaldiseks B\(A∪C)∪(A∩C\B)</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>Koostada nähtud Venn'i diagrammi põhjal hulgateooria avaldis. Soovitatav on kopeerida märgid lubatud tähemärkide nimekirjast.</p>]]></text>
+    </questiontext>
+    <generalfeedback format="html">
+      <text></text>
+    </generalfeedback>
+    <defaultgrade>1.0000000</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <vd_correctanswer>36</vd_correctanswer>
+    <vd_expression_maxlen>0</vd_expression_maxlen>
+    <vd_expression_chars>(∅ABCU∩∪\Δ')</vd_expression_chars>
+  </question>
+
+<!-- question: 23  -->
+  <question type="vdexpression">
+    <name>
+      <text>diagramm avaldiseks B\(AΔC)</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>Koostada nähtud Venn'i diagrammi põhjal hulgateooria avaldis. Soovitatav on kopeerida märgid lubatud tähemärkide nimekirjast.</p>]]></text>
+    </questiontext>
+    <generalfeedback format="html">
+      <text></text>
+    </generalfeedback>
+    <defaultgrade>1.0000000</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <vd_correctanswer>132</vd_correctanswer>
+    <vd_expression_maxlen>7</vd_expression_maxlen>
+    <vd_expression_chars>(ABC\Δ)</vd_expression_chars>
+  </question>
+
+</quiz>
